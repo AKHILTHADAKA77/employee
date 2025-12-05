@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Worksheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .worksheet-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .worksheet-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .client-selection {
+            margin-bottom: 20px;
+        }
+        
+        .client-selection label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .client-select {
+            padding: 8px 12px;
+            width: 250px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        .client-info {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .client-info label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .client-name-input {
+            padding: 8px 12px;
+            width: 350px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        .worksheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .worksheet-table th {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .worksheet-table td {
+            border: 1px solid #ccc;
+            padding: 12px 8px;
+            vertical-align: top;
+            background-color: white;
+        }
+        
+        .platform-name {
+            font-weight: bold;
+            color: #333;
+            width: 120px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        /* Checkbox container styling */
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 6px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            font-size: 12px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .remarks-input {
+            width: 100%;
+            min-width: 150px;
+        }
+        
+        .add-platform-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            float: right;
+        }
+        
+        .add-platform-btn:hover {
+            background-color: #218838;
+        }
+        
+        .remove-platform-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        
+        .remove-platform-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .extra-section {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            clear: both;
+        }
+        
+        .extra-section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+            color: #333;
+        }
+        
+        .submit-section {
+            text-align: center;
+        }
+        
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .table-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .table-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        /* Platform icon styling */
+        .platform-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            margin-right: 8px;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .facebook-icon {
+            background-color: #1877f2;
+        }
+        
+        .instagram-icon {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+        
+        .youtube-icon {
+            background-color: #ff0000;
+        }
+        
+        .linkedin-icon {
+            background-color: #0a66c2;
+        }
+        
+        .twitter-icon {
+            background-color: #1da1f2;
+        }
+        
+        .tiktok-icon {
+            background-color: #000000;
+        }
+        
+        .pinterest-icon {
+            background-color: #e60023;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .worksheet-container {
+                padding: 15px;
+            }
+            
+            .worksheet-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .client-select, .client-name-input {
+                width: 100%;
+            }
+            
+            .add-platform-btn {
+                float: none;
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .table-header-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .checkbox-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="worksheet-container">
+        <div class="worksheet-title">Daily worksheet</div>
+        
+        <!-- Client Selection -->
+        <div class="client-selection">
+            <label>Select Client:</label>
+            <select class="client-select" id="clientSelect">
+                <option value="client1">Client 1</option>
+                <option value="client2">Client 2</option>
+                <option value="client3" selected>Client 3</option>
+                <option value="client4">Client 4</option>
+                <option value="client5">Client 5</option>
+            </select>
+        </div>
+        
+        <!-- Client Company Name -->
+        <div class="client-info">
+            <label>LOGGING</label>
+            <input type="text" class="client-name-input" id="clientCompanyName" placeholder="Client company name" value="Client 3 Pvt Ltd">
+        </div>
+        
+        <!-- Table Header with Add Button -->
+        <div class="table-header-section">
+            <div class="table-title">Platform Tasks</div>
+            <button class="add-platform-btn" id="addPlatformBtn">+ Add New Platform</button>
+        </div>
+        
+        <!-- Worksheet Table -->
+        <table class="worksheet-table" id="platformsTable">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">PLATFORM</th>
+                    <th style="width: 25%;">TASK TYPE</th>
+                    <th style="width: 15%;">WORK DONE</th>
+                    <th style="width: 10%;">POSTER/VIDEO CREATED</th>
+                    <th style="width: 10%;">POST SCHEDULED/POSTED</th>
+                    <th style="width: 10%;">CONTENT RECEIVED</th>
+                    <th style="width: 15%;">REMARKS</th>
+                    <th style="width: 5%;">ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody id="platformRows">
+                <!-- Facebook Row -->
+                <tr id="row-facebook">
+                    <td class="platform-name">
+                        <span class="platform-icon facebook-icon">F</span>
+                        Facebook
+                    </td>
+                    <td>
+                        <div class="checkbox-container">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="facebook_posting" value="Page Posting">
+                                <label for="facebook_posting">Page Posting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="facebook_maintenance" value="Page Maintenance">
+                                <label for="facebook_maintenance">Page Maintenance</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="facebook_ads" value="Ad Management">
+                                <label for="facebook_ads">Ad Management</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="facebook_analytics" value="Analytics & Reporting">
+                                <label for="facebook_analytics">Analytics & Reporting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="facebook_community" value="Community Management">
+                                <label for="facebook_community">Community Management</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="facebook_content" value="Content Creation">
+                                <label for="facebook_content">Content Creation</label>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneFacebook">
+                            <option value="">Select Work</option>
+                            <option value="posted">Posted Content</option>
+                            <option value="scheduled">Scheduled Posts</option>
+                            <option value="created">Created Content</option>
+                            <option value="edited">Edited Content</option>
+                            <option value="ads">Created Ads</option>
+                            <option value="responded">Responded to Comments</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created" id="posterCreatedFacebook">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled" id="postScheduledFacebook">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received" id="contentReceivedFacebook">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksFacebook" placeholder="Enter remark">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('facebook')">×</button>
+                    </td>
+                </tr>
+                
+                <!-- Instagram Row -->
+                <tr id="row-instagram">
+                    <td class="platform-name">
+                        <span class="platform-icon instagram-icon">IG</span>
+                        Instagram
+                    </td>
+                    <td>
+                        <div class="checkbox-container">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="instagram_posting" value="Feed Posting">
+                                <label for="instagram_posting">Feed Posting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="instagram_stories" value="Stories Creation">
+                                <label for="instagram_stories">Stories Creation</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="instagram_reels" value="Reels Creation">
+                                <label for="instagram_reels">Reels Creation</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="instagram_analytics" value="Analytics & Reporting">
+                                <label for="instagram_analytics">Analytics & Reporting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="instagram_engagement" value="Engagement Management">
+                                <label for="instagram_engagement">Engagement Management</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="instagram_content" value="Content Creation">
+                                <label for="instagram_content">Content Creation</label>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneInstagram">
+                            <option value="">Select Work</option>
+                            <option value="posted">Posted Content</option>
+                            <option value="stories">Posted Stories</option>
+                            <option value="reels">Created Reels</option>
+                            <option value="edited">Edited Content</option>
+                            <option value="igtv">Uploaded IGTV</option>
+                            <option value="responded">Responded to Comments</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created" id="posterCreatedInstagram">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled" id="postScheduledInstagram">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received" id="contentReceivedInstagram">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksInstagram" placeholder="Enter remark">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('instagram')">×</button>
+                    </td>
+                </tr>
+                
+                <!-- YouTube Row -->
+                <tr id="row-youtube">
+                    <td class="platform-name">
+                        <span class="platform-icon youtube-icon">YT</span>
+                        YouTube
+                    </td>
+                    <td>
+                        <div class="checkbox-container">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="youtube_upload" value="Video Upload">
+                                <label for="youtube_upload">Video Upload</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="youtube_editing" value="Video Editing">
+                                <label for="youtube_editing">Video Editing</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="youtube_seo" value="SEO Optimization">
+                                <label for="youtube_seo">SEO Optimization</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="youtube_analytics" value="Channel Analytics">
+                                <label for="youtube_analytics">Channel Analytics</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="youtube_thumbnail" value="Thumbnail Creation">
+                                <label for="youtube_thumbnail">Thumbnail Creation</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="youtube_description" value="Description Writing">
+                                <label for="youtube_description">Description Writing</label>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneYouTube">
+                            <option value="">Select Work</option>
+                            <option value="uploaded">Uploaded Video</option>
+                            <option value="edited">Edited Video</option>
+                            <option value="seo">SEO Optimized</option>
+                            <option value="thumbnail">Created Thumbnail</option>
+                            <option value="description">Updated Description</option>
+                            <option value="responded">Responded to Comments</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created" id="posterCreatedYouTube">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled" id="postScheduledYouTube">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received" id="contentReceivedYouTube">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksYouTube" placeholder="Enter remark">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('youtube')">×</button>
+                    </td>
+                </tr>
+                
+                <!-- LinkedIn Row -->
+                <tr id="row-linkedin">
+                    <td class="platform-name">
+                        <span class="platform-icon linkedin-icon">IN</span>
+                        LinkedIn
+                    </td>
+                    <td>
+                        <div class="checkbox-container">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="linkedin_posting" value="Company Posting">
+                                <label for="linkedin_posting">Company Posting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="linkedin_articles" value="Article Writing">
+                                <label for="linkedin_articles">Article Writing</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="linkedin_engagement" value="Engagement Management">
+                                <label for="linkedin_engagement">Engagement Management</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="linkedin_analytics" value="Analytics & Reporting">
+                                <label for="linkedin_analytics">Analytics & Reporting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="linkedin_recruitment" value="Recruitment Posting">
+                                <label for="linkedin_recruitment">Recruitment Posting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="linkedin_content" value="Content Creation">
+                                <label for="linkedin_content">Content Creation</label>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneLinkedIn">
+                            <option value="">Select Work</option>
+                            <option value="posted">Posted Content</option>
+                            <option value="articles">Posted Articles</option>
+                            <option value="scheduled">Scheduled Posts</option>
+                            <option value="edited">Edited Content</option>
+                            <option value="engaged">Engaged with Network</option>
+                            <option value="recruitment">Posted Job</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created" id="posterCreatedLinkedIn">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled" id="postScheduledLinkedIn">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received" id="contentReceivedLinkedIn">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksLinkedIn" placeholder="Enter remark">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('linkedin')">×</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Extra Text Area -->
+        <div class="extra-section">
+            <label>text any extra :</label>
+            <textarea id="extraNotes" placeholder="Add any additional notes or comments here..."></textarea>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="submit-section">
+            <button class="submit-btn" id="submitBtn">Submit Task</button>
+        </div>
+    </div>
+
+    <!-- New Platform Modal -->
+    <div id="platformModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            <h3 style="margin-bottom: 20px; color: #333;">Add New Platform</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">Select Platform:</label>
+                <select id="newPlatformSelect" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                    <option value="">-- Select Platform --</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="pinterest">Pinterest</option>
+                    <option value="snapchat">Snapchat</option>
+                    <option value="whatsapp">WhatsApp Business</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="reddit">Reddit</option>
+                    <option value="quora">Quora</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">Custom Platform Name:</label>
+                <input type="text" id="customPlatformName" placeholder="Enter custom platform name" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="cancelPlatformBtn" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                <button id="confirmPlatformBtn" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Add Platform</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Client data mapping
+        const clientData = {
+            'client1': 'Client 1 Company',
+            'client2': 'Client 2 Ltd',
+            'client3': 'Client 3 Pvt Ltd',
+            'client4': 'Client 4 Inc',
+            'client5': 'Client 5 Solutions'
+        };
+        
+        // Platform configuration
+        const platformConfig = {
+            'facebook': { name: 'Facebook', icon: 'facebook-icon', code: 'F' },
+            'instagram': { name: 'Instagram', icon: 'instagram-icon', code: 'IG' },
+            'youtube': { name: 'YouTube', icon: 'youtube-icon', code: 'YT' },
+            'linkedin': { name: 'LinkedIn', icon: 'linkedin-icon', code: 'IN' },
+            'twitter': { name: 'Twitter', icon: 'twitter-icon', code: 'TW' },
+            'tiktok': { name: 'TikTok', icon: 'tiktok-icon', code: 'TT' },
+            'pinterest': { name: 'Pinterest', icon: 'pinterest-icon', code: 'PI' },
+            'snapchat': { name: 'Snapchat', icon: 'snapchat-icon', code: 'SC' },
+            'whatsapp': { name: 'WhatsApp Business', icon: 'whatsapp-icon', code: 'WA' },
+            'telegram': { name: 'Telegram', icon: 'telegram-icon', code: 'TG' },
+            'reddit': { name: 'Reddit', icon: 'reddit-icon', code: 'RD' },
+            'quora': { name: 'Quora', icon: 'quora-icon', code: 'QR' }
+        };
+        
+        // Track existing platforms to avoid duplicates
+        const existingPlatforms = new Set(['facebook', 'instagram', 'youtube', 'linkedin']);
+        
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            const clientSelect = document.getElementById('clientSelect');
+            const companyNameInput = document.getElementById('clientCompanyName');
+            const addPlatformBtn = document.getElementById('addPlatformBtn');
+            const platformModal = document.getElementById('platformModal');
+            const cancelPlatformBtn = document.getElementById('cancelPlatformBtn');
+            const confirmPlatformBtn = document.getElementById('confirmPlatformBtn');
+            const newPlatformSelect = document.getElementById('newPlatformSelect');
+            const customPlatformName = document.getElementById('customPlatformName');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Set Client 3 as default
+            clientSelect.value = 'client3';
+            companyNameInput.value = clientData['client3'];
+            
+            // Update company name when client changes
+            clientSelect.addEventListener('change', function() {
+                const selectedClient = this.value;
+                companyNameInput.value = clientData[selectedClient] || '';
+            });
+            
+            // Add Platform Button Click
+            addPlatformBtn.addEventListener('click', function() {
+                platformModal.style.display = 'flex';
+                newPlatformSelect.value = '';
+                customPlatformName.value = '';
+            });
+            
+            // Cancel Platform Addition
+            cancelPlatformBtn.addEventListener('click', function() {
+                platformModal.style.display = 'none';
+            });
+            
+            // Confirm Platform Addition
+            confirmPlatformBtn.addEventListener('click', function() {
+                const platformType = newPlatformSelect.value;
+                const customName = customPlatformName.value.trim();
+                
+                if (!platformType && !customName) {
+                    alert('Please select a platform or enter a custom platform name.');
+                    return;
+                }
+                
+                let platformId, platformName, platformIcon, platformCode;
+                
+                if (platformType) {
+                    // Use predefined platform
+                    if (existingPlatforms.has(platformType)) {
+                        alert('This platform is already added to the table.');
+                        return;
+                    }
+                    
+                    platformId = platformType;
+                    platformName = platformConfig[platformType].name;
+                    platformIcon = platformConfig[platformType].icon;
+                    platformCode = platformConfig[platformType].code;
+                } else {
+                    // Use custom platform
+                    platformId = customName.toLowerCase().replace(/\s+/g, '_');
+                    platformName = customName;
+                    platformIcon = 'default-icon';
+                    platformCode = customName.substring(0, 2).toUpperCase();
+                    
+                    if (existingPlatforms.has(platformId)) {
+                        alert('This platform is already added to the table.');
+                        return;
+                    }
+                }
+                
+                // Add the new platform row
+                addPlatformRow(platformId, platformName, platformIcon, platformCode);
+                existingPlatforms.add(platformId);
+                
+                // Close modal
+                platformModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            platformModal.addEventListener('click', function(e) {
+                if (e.target === platformModal) {
+                    platformModal.style.display = 'none';
+                }
+            });
+            
+            // Form submission
+            submitBtn.addEventListener('click', function() {
+                const selectedClient = clientSelect.options[clientSelect.selectedIndex].text;
+                const companyName = companyNameInput.value;
+                
+                // Basic validation
+                if (!companyName.trim()) {
+                    alert('Please enter client company name.');
+                    companyNameInput.focus();
+                    return;
+                }
+                
+                // Collect form data
+                const formData = {
+                    client: selectedClient,
+                    company: companyName,
+                    tasks: []
+                };
+                
+                // Collect each platform's data
+                const rows = document.querySelectorAll('#platformRows tr');
+                rows.forEach(row => {
+                    const platformName = row.querySelector('.platform-name').textContent.trim();
+                    const checkboxes = row.querySelectorAll('input[type="checkbox"]:checked');
+                    const selectedTasks = Array.from(checkboxes).map(cb => cb.value);
+                    const workDone = row.querySelector('.work-done').value;
+                    const posterCreated = row.querySelector('.poster-created').value;
+                    const postScheduled = row.querySelector('.post-scheduled').value;
+                    const contentReceived = row.querySelector('.content-received').value;
+                    const remarks = row.querySelector('.remarks-input').value;
+                    
+                    formData.tasks.push({
+                        platform: platformName,
+                        taskTypes: selectedTasks,
+                        workDone,
+                        posterCreated,
+                        postScheduled,
+                        contentReceived,
+                        remarks
+                    });
+                });
+                
+                // Get extra text
+                const extraText = document.getElementById('extraNotes').value;
+                formData.extraNotes = extraText;
+                
+                // Show success message with selected task types
+                let message = `Task submitted successfully for ${companyName}!\n\n`;
+                message += 'Summary of tasks:\n';
+                
+                formData.tasks.forEach((task, index) => {
+                    message += `${index + 1}. ${task.platform}: ${task.taskTypes.join(', ') || 'No task types selected'}\n`;
+                });
+                
+                alert(message);
+                
+                // Log data to console (for debugging)
+                console.log('Form data:', formData);
+            });
+            
+            // Add some sample data for demonstration
+            setTimeout(() => {
+                // Pre-select some checkboxes for demonstration
+                document.getElementById('facebook_posting').checked = true;
+                document.getElementById('facebook_analytics').checked = true;
+                document.getElementById('instagram_stories').checked = true;
+                document.getElementById('instagram_engagement').checked = true;
+                
+                // Pre-fill other fields
+                document.getElementById('workDoneFacebook').value = 'posted';
+                document.getElementById('posterCreatedFacebook').value = 'yes';
+                document.getElementById('postScheduledFacebook').value = 'yes';
+                document.getElementById('contentReceivedFacebook').value = 'yes';
+                document.getElementById('remarksFacebook').value = 'Posted weekly update and analyzed performance';
+                
+                document.getElementById('workDoneInstagram').value = 'stories';
+                document.getElementById('posterCreatedInstagram').value = 'yes';
+                document.getElementById('postScheduledInstagram').value = 'yes';
+                document.getElementById('contentReceivedInstagram').value = 'yes';
+                document.getElementById('remarksInstagram').value = 'Posted product story and engaged with followers';
+            }, 100);
+        });
+        
+        // Function to add a new platform row
+        function addPlatformRow(platformId, platformName, platformIcon, platformCode) {
+            const tableBody = document.getElementById('platformRows');
+            
+            // Create new row
+            const newRow = document.createElement('tr');
+            newRow.id = `row-${platformId}`;
+            
+            // Generate unique IDs for this row
+            const workDoneId = `workDone${platformId}`;
+            const posterCreatedId = `posterCreated${platformId}`;
+            const postScheduledId = `postScheduled${platformId}`;
+            const contentReceivedId = `contentReceived${platformId}`;
+            const remarksId = `remarks${platformId}`;
+            
+            // Set row content
+            newRow.innerHTML = `
+                <td class="platform-name">
+                    <span class="platform-icon ${platformIcon}">${platformCode}</span>
+                    ${platformName}
+                </td>
+                <td>
+                    <div class="checkbox-container">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${platformId}_posting" value="Page/Profile Posting">
+                            <label for="${platformId}_posting">Page/Profile Posting</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${platformId}_content" value="Content Creation">
+                            <label for="${platformId}_content">Content Creation</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${platformId}_engagement" value="Engagement Management">
+                            <label for="${platformId}_engagement">Engagement Management</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${platformId}_analytics" value="Analytics & Reporting">
+                            <label for="${platformId}_analytics">Analytics & Reporting</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${platformId}_scheduling" value="Content Scheduling">
+                            <label for="${platformId}_scheduling">Content Scheduling</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${platformId}_advertising" value="Advertising">
+                            <label for="${platformId}_advertising">Advertising</label>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <select class="work-done" id="${workDoneId}">
+                        <option value="">Select Work</option>
+                        <option value="posted">Posted Content</option>
+                        <option value="created">Created Content</option>
+                        <option value="scheduled">Scheduled Posts</option>
+                        <option value="edited">Edited Content</option>
+                        <option value="responded">Responded to Users</option>
+                        <option value="analyzed">Analyzed Performance</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="poster-created" id="${posterCreatedId}">
+                        <option value="">Select</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="na">N/A</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="post-scheduled" id="${postScheduledId}">
+                        <option value="">Select</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="inprogress">In Progress</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="content-received" id="${contentReceivedId}">
+                        <option value="">Select</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="partial">Partially</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="remarks-input" id="${remarksId}" placeholder="Enter remark">
+                </td>
+                <td>
+                    <button class="remove-platform-btn" onclick="removePlatform('${platformId}')">×</button>
+                </td>
+            `;
+            
+            // Add row to table
+            tableBody.appendChild(newRow);
+        }
+        
+        // Function to remove a platform row
+        function removePlatform(platformId) {
+            const row = document.getElementById(`row-${platformId}`);
+            if (row) {
+                row.remove();
+                existingPlatforms.delete(platformId);
+            }
+        }
+    </script>
+</body>
+</html>

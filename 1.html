@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Worksheet with Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        /* Left Panel - Worksheet */
+        .worksheet-panel {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f6df5 0%, #3a56d4 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .client-management {
+            padding: 25px 30px;
+            border-bottom: 1px solid #eef1f6;
+            background-color: #f8fafd;
+        }
+        
+        .client-selector {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .client-selector label {
+            font-weight: 600;
+            color: #555;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+        
+        .client-dropdown {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        
+        .client-dropdown select {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #444;
+            background-color: white;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 18px;
+            cursor: pointer;
+        }
+        
+        .client-dropdown select:focus {
+            outline: none;
+            border-color: #4f6df5;
+            box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.15);
+        }
+        
+        .add-client-btn {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25);
+        }
+        
+        .add-client-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.35);
+        }
+        
+        .client-info-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #4f6df5;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .client-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .client-company {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3a56d4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .client-company::before {
+            content: "🏢";
+            font-size: 18px;
+        }
+        
+        .client-code {
+            font-size: 16px;
+            color: #666;
+            padding-left: 5px;
+        }
+        
+        .client-code::before {
+            content: "🔖";
+            margin-right: 8px;
+        }
+        
+        .table-container {
+            padding: 25px 30px;
+            overflow-x: auto;
+        }
+        
+        .worksheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .worksheet-table thead {
+            background-color: #4f6df5;
+            color: white;
+        }
+        
+        .worksheet-table th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .worksheet-table th:last-child {
+            border-right: none;
+        }
+        
+        .worksheet-table tbody tr {
+            border-bottom: 1px solid #eef1f6;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        
+        .worksheet-table tbody tr:hover {
+            background-color: #f9fbfe;
+        }
+        
+        .worksheet-table tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        .worksheet-table td {
+            padding: 16px 12px;
+            vertical-align: middle;
+        }
+        
+        .platform-cell {
+            font-weight: 600;
+            color: #3a56d4;
+            font-size: 14px;
+            min-width: 100px;
+        }
+        
+        .platform-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            margin-right: 8px;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .facebook-icon {
+            background-color: #1877f2;
+        }
+        
+        .instagram-icon {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+        
+        .youtube-icon {
+            background-color: #ff0000;
+        }
+        
+        .linkedin-icon {
+            background-color: #0a66c2;
+        }
+        
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #444;
+            background-color: white;
+            transition: all 0.2s;
+        }
+        
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #4f6df5;
+            box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.1);
+        }
+        
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+            padding-right: 35px;
+        }
+        
+        .remarks-input {
+            min-width: 150px;
+        }
+        
+        .extra-section {
+            padding: 25px 30px;
+            border-top: 1px solid #eef1f6;
+            background-color: #f8fafd;
+        }
+        
+        .extra-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #444;
+            background-color: white;
+            min-height: 100px;
+            resize: vertical;
+            transition: all 0.2s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #4f6df5;
+            box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.1);
+        }
+        
+        .submit-section {
+            padding: 25px 30px;
+            text-align: center;
+            background-color: white;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #4f6df5 0%, #3a56d4 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(79, 109, 245, 0.3);
+            letter-spacing: 0.5px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 109, 245, 0.4);
+        }
+        
+        /* Right Panel - Calendar */
+        .calendar-panel {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .calendar-header {
+            background: linear-gradient(135deg, #4f6df5 0%, #3a56d4 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        .calendar-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: #f8fafd;
+            border-bottom: 1px solid #eef1f6;
+        }
+        
+        .month-navigation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background-color: white;
+            border: 2px solid #d1d9e6;
+            color: #555;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .nav-btn:hover {
+            background-color: #4f6df5;
+            border-color: #4f6df5;
+            color: white;
+        }
+        
+        .current-month {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3a56d4;
+            min-width: 180px;
+            text-align: center;
+        }
+        
+        .today-btn {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25);
+        }
+        
+        .today-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.35);
+        }
+        
+        .calendar-grid {
+            flex: 1;
+            padding: 20px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .weekday {
+            text-align: center;
+            font-weight: 600;
+            color: #4f6df5;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .calendar-day {
+            background-color: white;
+            border: 2px solid #f0f3f9;
+            border-radius: 10px;
+            padding: 12px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .calendar-day:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: #4f6df5;
+        }
+        
+        .calendar-day.other-month {
+            background-color: #f8fafd;
+            color: #b0b7c3;
+        }
+        
+        .calendar-day.today {
+            background-color: #e8f0ff;
+            border-color: #4f6df5;
+        }
+        
+        .calendar-day.has-tasks {
+            background-color: #f0f9ff;
+            border-left: 4px solid #4f6df5;
+        }
+        
+        .day-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .day-tasks {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 11px;
+        }
+        
+        .task-item {
+            background-color: rgba(79, 109, 245, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            border-left: 3px solid #4f6df5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .task-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #ff6b6b;
+            color: white;
+            font-size: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .add-task-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background-color: #4f6df5;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .add-task-btn:hover {
+            background-color: #3a56d4;
+            transform: scale(1.1);
+        }
+        
+        .calendar-stats {
+            padding: 20px 30px;
+            background-color: #f8fafd;
+            border-top: 1px solid #eef1f6;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4f6df5;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #ff6b6b;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4f6df5;
+            box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.15);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .cancel-btn {
+            background-color: #f8f9fa;
+            color: #555;
+            border: 2px solid #d1d9e6;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #4f6df5 0%, #3a56d4 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(79, 109, 245, 0.35);
+        }
+        
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .calendar-panel {
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 15px;
+            }
+            
+            .header, .client-management, .table-container, .extra-section, .submit-section {
+                padding: 20px;
+            }
+            
+            .calendar-header, .calendar-controls, .calendar-grid, .calendar-stats {
+                padding: 20px;
+            }
+            
+            .client-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .client-dropdown {
+                min-width: 100%;
+            }
+            
+            .worksheet-table {
+                min-width: 800px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .calendar-day {
+                min-height: 80px;
+                padding: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .month-navigation {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .calendar-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Left Panel: Worksheet -->
+        <div class="worksheet-panel">
+            <div class="header">
+                <h1>Daily Worksheet</h1>
+                <div class="subtitle">Task Logging System</div>
+            </div>
+            
+            <div class="client-management">
+                <div class="client-selector">
+                    <label for="clientSelect">Select Client:</label>
+                    <div class="client-dropdown">
+                        <select id="clientSelect">
+                            <option value="client1">Client 1 - ABC Corporation</option>
+                            <option value="client2">Client 2 - XYZ Solutions</option>
+                            <option value="client3">Client 3 - Tech Innovations</option>
+                            <option value="client4">Client 4 - Global Enterprises</option>
+                            <option value="client5" selected>Client 5 - Solution Providers</option>
+                        </select>
+                    </div>
+                    <button class="add-client-btn" id="addClientBtn">+ Add New Client</button>
+                </div>
+                
+                <div class="client-info-card">
+                    <div class="client-details">
+                        <div class="client-company">Client 5 Solution</div>
+                        <div class="client-code">Client Code: CL-005</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="worksheet-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 12%;">PLATFORM</th>
+                            <th style="width: 15%;">TASK TYPE</th>
+                            <th style="width: 15%;">WORK DONE</th>
+                            <th style="width: 13%;">POSTER/VIDEO CREATED</th>
+                            <th style="width: 13%;">POST SCHEDULED/POSTED</th>
+                            <th style="width: 13%;">CONTENT RECEIVED</th>
+                            <th style="width: 19%;">REMARKS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Facebook Row -->
+                        <tr>
+                            <td class="platform-cell">
+                                <span class="platform-icon facebook-icon">F</span>
+                                Facebook
+                            </td>
+                            <td>
+                                <select class="task-type">
+                                    <option value="">Select Task Type</option>
+                                    <option value="posting" selected>Page Posting</option>
+                                    <option value="maintenance">Page Maintenance</option>
+                                    <option value="ad_management">Ad Management</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="work-done">
+                                    <option value="">Select Work</option>
+                                    <option value="posted" selected>Posted Content</option>
+                                    <option value="scheduled">Scheduled Posts</option>
+                                    <option value="created">Created Content</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="poster-created">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="na">N/A</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="post-scheduled">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="in_progress">In Progress</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="content-received">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="partial">Partially</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="remarks-input" value="Posted weekly update">
+                            </td>
+                        </tr>
+                        
+                        <!-- Instagram Row -->
+                        <tr>
+                            <td class="platform-cell">
+                                <span class="platform-icon instagram-icon">IG</span>
+                                Instagram
+                            </td>
+                            <td>
+                                <select class="task-type">
+                                    <option value="">Select Task Type</option>
+                                    <option value="posting">Feed Posting</option>
+                                    <option value="story" selected>Story Creation</option>
+                                    <option value="reels">Reels Creation</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="work-done">
+                                    <option value="">Select Work</option>
+                                    <option value="posted">Posted Content</option>
+                                    <option value="story_posted" selected>Posted Story</option>
+                                    <option value="reel_posted">Posted Reel</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="poster-created">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="na">N/A</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="post-scheduled">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="in_progress">In Progress</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="content-received">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="partial">Partially</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="remarks-input" value="Posted product story">
+                            </td>
+                        </tr>
+                        
+                        <!-- YouTube Row -->
+                        <tr>
+                            <td class="platform-cell">
+                                <span class="platform-icon youtube-icon">YT</span>
+                                YouTube
+                            </td>
+                            <td>
+                                <select class="task-type">
+                                    <option value="">Select Task Type</option>
+                                    <option value="upload">Video Upload</option>
+                                    <option value="editing">Video Editing</option>
+                                    <option value="thumbnail" selected>Thumbnail Creation</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="work-done">
+                                    <option value="">Select Work</option>
+                                    <option value="uploaded">Uploaded Video</option>
+                                    <option value="edited">Edited Video</option>
+                                    <option value="thumbnail_created" selected>Created Thumbnail</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="poster-created">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="na">N/A</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="post-scheduled">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="in_progress">In Progress</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="content-received">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="partial">Partially</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="remarks-input" value="Created thumbnail for new video">
+                            </td>
+                        </tr>
+                        
+                        <!-- LinkedIn Row -->
+                        <tr>
+                            <td class="platform-cell">
+                                <span class="platform-icon linkedin-icon">IN</span>
+                                LinkedIn
+                            </td>
+                            <td>
+                                <select class="task-type">
+                                    <option value="">Select Task Type</option>
+                                    <option value="posting" selected>Company Posting</option>
+                                    <option value="article">Article Writing</option>
+                                    <option value="engagement">Engagement</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="work-done">
+                                    <option value="">Select Work</option>
+                                    <option value="posted" selected>Posted Content</option>
+                                    <option value="article_posted">Posted Article</option>
+                                    <option value="scheduled">Scheduled Posts</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="poster-created">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="na">N/A</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="post-scheduled">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="in_progress">In Progress</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="content-received">
+                                    <option value="">Select</option>
+                                    <option value="yes" selected>Yes</option>
+                                    <option value="no">No</option>
+                                    <option value="partial">Partially</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="remarks-input" value="Posted company update">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="extra-section">
+                <label class="extra-label">text any extra:</label>
+                <textarea id="extraNotes">All tasks completed as per schedule. Client approved the content. Need to follow up on YouTube analytics report.</textarea>
+            </div>
+            
+            <div class="submit-section">
+                <button class="submit-btn">Submit Task</button>
+            </div>
+        </div>
+        
+        <!-- Right Panel: Calendar -->
+        <div class="calendar-panel">
+            <div class="calendar-header">
+                <h2>Task Calendar</h2>
+                <div class="subtitle">View and manage scheduled tasks</div>
+            </div>
+            
+            <div class="calendar-controls">
+                <div class="month-navigation">
+                    <button class="nav-btn" id="prevMonth">‹</button>
+                    <div class="current-month" id="currentMonth">June 2024</div>
+                    <button class="nav-btn" id="nextMonth">›</button>
+                </div>
+                <button class="today-btn" id="todayBtn">Today</button>
+            </div>
+            
+            <div class="calendar-grid">
+                <div class="weekdays">
+                    <div class="weekday">Sun</div>
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                </div>
+                
+                <div class="calendar-days" id="calendarDays">
+                    <!-- Calendar days will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="calendar-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="tasksThisMonth">24</div>
+                        <div class="stat-label">Tasks This Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedTasks">18</div>
+                        <div class="stat-label">Completed Tasks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="pendingTasks">6</div>
+                        <div class="stat-label">Pending Tasks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="clientTasks">12</div>
+                        <div class="stat-label">Client 5 Tasks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Client Modal -->
+    <div class="modal" id="addClientModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Client</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            
+            <form id="clientForm">
+                <div class="form-group">
+                    <label for="clientName">Client Name</label>
+                    <input type="text" id="clientName" placeholder="Enter client name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="companyName">Company Name</label>
+                    <input type="text" id="companyName" placeholder="Enter company name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientCode">Client Code</label>
+                    <input type="text" id="clientCode" placeholder="CL-XXX" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientEmail">Contact Email</label>
+                    <input type="email" id="clientEmail" placeholder="Enter email address" required>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" id="cancelAddClient">Cancel</button>
+                    <button type="submit" class="save-btn">Add Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Calendar Data
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        
+        // Sample task data for calendar
+        const taskData = {
+            "2024-06-15": [
+                { platform: "Facebook", task: "Page Posting", client: "Client 5" },
+                { platform: "Instagram", task: "Story Creation", client: "Client 5" }
+            ],
+            "2024-06-18": [
+                { platform: "YouTube", task: "Video Upload", client: "Client 3" },
+                { platform: "LinkedIn", task: "Company Posting", client: "Client 5" }
+            ],
+            "2024-06-20": [
+                { platform: "Facebook", task: "Ad Management", client: "Client 2" },
+                { platform: "Instagram", task: "Reels Creation", client: "Client 5" },
+                { platform: "YouTube", task: "Thumbnail Creation", client: "Client 5" }
+            ],
+            "2024-06-25": [
+                { platform: "LinkedIn", task: "Article Writing", client: "Client 4" }
+            ],
+            "2024-06-28": [
+                { platform: "Facebook", task: "Page Maintenance", client: "Client 5" },
+                { platform: "Instagram", task: "Analytics", client: "Client 1" }
+            ]
+        };
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize calendar
+            renderCalendar();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Set initial client data
+            updateClientInfo('client5');
+        });
+        
+        // Render calendar
+        function renderCalendar() {
+            const calendarDays = document.getElementById('calendarDays');
+            const currentMonthElement = document.getElementById('currentMonth');
+            
+            // Clear calendar
+            calendarDays.innerHTML = '';
+            
+            // Update month display
+            const monthNames = ["January", "February", "March", "April", "May", "June", 
+                                "July", "August", "September", "October", "November", "December"];
+            currentMonthElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Get first day of month and total days
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+            
+            // Add empty cells for days before first day
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day other-month';
+                calendarDays.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const tasks = taskData[dateKey] || [];
+                
+                // Set class based on date
+                dayElement.className = 'calendar-day';
+                
+                // Check if today
+                if (currentYear === today.getFullYear() && 
+                    currentMonth === today.getMonth() && 
+                    day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Check if has tasks
+                if (tasks.length > 0) {
+                    dayElement.classList.add('has-tasks');
+                }
+                
+                // Day number
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                dayElement.appendChild(dayNumber);
+                
+                // Task count badge
+                if (tasks.length > 0) {
+                    const taskCount = document.createElement('div');
+                    taskCount.className = 'task-count';
+                    taskCount.textContent = tasks.length;
+                    dayElement.appendChild(taskCount);
+                }
+                
+                // Tasks list
+                if (tasks.length > 0) {
+                    const tasksContainer = document.createElement('div');
+                    tasksContainer.className = 'day-tasks';
+                    
+                    // Show only Client 5 tasks in preview
+                    const client5Tasks = tasks.filter(task => task.client === 'Client 5');
+                    const otherTasks = tasks.filter(task => task.client !== 'Client 5');
+                    
+                    client5Tasks.slice(0, 2).forEach(task => {
+                        const taskElement = document.createElement('div');
+                        taskElement.className = 'task-item';
+                        taskElement.textContent = `${task.platform}: ${task.task}`;
+                        tasksContainer.appendChild(taskElement);
+                    });
+                    
+                    if (otherTasks.length > 0 || client5Tasks.length > 2) {
+                        const moreElement = document.createElement('div');
+                        moreElement.className = 'task-item';
+                        moreElement.textContent = `+${otherTasks.length + Math.max(0, client5Tasks.length - 2)} more`;
+                        tasksContainer.appendChild(moreElement);
+                    }
+                    
+                    dayElement.appendChild(tasksContainer);
+                }
+                
+                // Add task button
+                const addButton = document.createElement('button');
+                addButton.className = 'add-task-btn';
+                addButton.textContent = '+';
+                addButton.onclick = (e) => {
+                    e.stopPropagation();
+                    alert(`Add task for ${monthNames[currentMonth]} ${day}, ${currentYear}`);
+                };
+                dayElement.appendChild(addButton);
+                
+                // Click event to view day details
+                dayElement.onclick = () => {
+                    showDayDetails(dateKey, tasks);
+                };
+                
+                calendarDays.appendChild(dayElement);
+            }
+            
+            // Update statistics
+            updateCalendarStats();
+        }
+        
+        // Show day details
+        function showDayDetails(dateKey, tasks) {
+            const date = new Date(dateKey);
+            const monthNames = ["January", "February", "March", "April", "May", "June", 
+                                "July", "August", "September", "October", "November", "December"];
+            
+            let message = `Tasks for ${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}\n\n`;
+            
+            if (tasks.length === 0) {
+                message += "No tasks scheduled for this day.";
+            } else {
+                tasks.forEach((task, index) => {
+                    message += `${index + 1}. ${task.platform} - ${task.task} (${task.client})\n`;
+                });
+            }
+            
+            alert(message);
+        }
+        
+        // Update calendar statistics
+        function updateCalendarStats() {
+            // Calculate statistics
+            const totalTasks = Object.values(taskData).flat().length;
+            const client5Tasks = Object.values(taskData).flat()
+                .filter(task => task.client === 'Client 5').length;
+            
+            // Update UI
+            document.getElementById('tasksThisMonth').textContent = totalTasks;
+            document.getElementById('clientTasks').textContent = client5Tasks;
+            
+            // Simulate completion rate (75%)
+            const completed = Math.floor(totalTasks * 0.75);
+            const pending = totalTasks - completed;
+            
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('pendingTasks').textContent = pending;
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Calendar navigation
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar();
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar();
+            });
+            
+            document.getElementById('todayBtn').addEventListener('click', () => {
+                const today = new Date();
+                currentMonth = today.getMonth();
+                currentYear = today.getFullYear();
+                renderCalendar();
+            });
+            
+            // Client selection
+            document.getElementById('clientSelect').addEventListener('change', function() {
+                updateClientInfo(this.value);
+            });
+            
+            // Add client modal
+            document.getElementById('addClientBtn').addEventListener('click', () => {
+                document.getElementById('addClientModal').style.display = 'flex';
+            });
+            
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+            document.getElementById('cancelAddClient').addEventListener('click', closeModal);
+            
+            // Client form submission
+            document.getElementById('clientForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const clientName = document.getElementById('clientName').value;
+                const companyName = document.getElementById('companyName').value;
+                const clientCode = document.getElementById('clientCode').value;
+                
+                // Add new client to dropdown
+                const select = document.getElementById('clientSelect');
+                const option = document.createElement('option');
+                const clientId = `client${select.options.length + 1}`;
+                option.value = clientId;
+                option.textContent = `${clientName} - ${companyName}`;
+                select.appendChild(option);
+                
+                // Select the new client
+                select.value = clientId;
+                updateClientInfo(clientId);
+                
+                // Close modal and reset form
+                closeModal();
+                this.reset();
+                
+                alert(`New client "${clientName}" added successfully!`);
+            });
+            
+            // Submit task
+            document.querySelector('.submit-btn').addEventListener('click', function() {
+                const clientSelect = document.getElementById('clientSelect');
+                const selectedClient = clientSelect.options[clientSelect.selectedIndex].text;
+                
+                // Validate form
+                let hasError = false;
+                const taskTypes = document.querySelectorAll('.task-type');
+                taskTypes.forEach(select => {
+                    if (!select.value) {
+                        select.style.borderColor = '#ff6b6b';
+                        hasError = true;
+                    } else {
+                        select.style.borderColor = '';
+                    }
+                });
+                
+                if (hasError) {
+                    alert('Please select task type for all platforms.');
+                    return;
+                }
+                
+                // Success message
+                alert(`Task submitted successfully for ${selectedClient}!`);
+                
+                // Simulate adding task to calendar
+                const today = new Date();
+                const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                
+                if (!taskData[todayKey]) {
+                    taskData[todayKey] = [];
+                }
+                
+                // Add sample task for today
+                taskData[todayKey].push({
+                    platform: "All Platforms",
+                    task: "Daily Tasks Completed",
+                    client: selectedClient.split(' - ')[0]
+                });
+                
+                // Update calendar
+                renderCalendar();
+            });
+        }
+        
+        // Update client information
+        function updateClientInfo(clientId) {
+            const clientInfo = {
+                client1: { company: "ABC Corporation", code: "CL-001" },
+                client2: { company: "XYZ Solutions", code: "CL-002" },
+                client3: { company: "Tech Innovations", code: "CL-003" },
+                client4: { company: "Global Enterprises", code: "CL-004" },
+                client5: { company: "Client 5 Solution", code: "CL-005" }
+            };
+            
+            const info = clientInfo[clientId] || { company: "New Client", code: "CL-000" };
+            
+            document.querySelector('.client-company').textContent = info.company;
+            document.querySelector('.client-code').textContent = `Client Code: ${info.code}`;
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('addClientModal').style.display = 'none';
+            document.getElementById('clientForm').reset();
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('addClientModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

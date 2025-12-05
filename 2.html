@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Worksheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .worksheet-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .worksheet-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .client-selection {
+            margin-bottom: 20px;
+        }
+        
+        .client-selection label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .client-select {
+            padding: 8px 12px;
+            width: 200px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        .client-info {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .client-info label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .client-name-input {
+            padding: 8px 12px;
+            width: 300px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        .worksheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .worksheet-table th {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .worksheet-table td {
+            border: 1px solid #ccc;
+            padding: 12px 8px;
+            vertical-align: middle;
+            background-color: white;
+        }
+        
+        .platform-name {
+            font-weight: bold;
+            color: #333;
+            width: 100px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .remarks-input {
+            width: 100%;
+            min-width: 150px;
+        }
+        
+        .extra-section {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .extra-section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+            color: #333;
+        }
+        
+        .submit-section {
+            text-align: center;
+        }
+        
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Style for select dropdowns */
+        select option {
+            padding: 8px;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .worksheet-container {
+                padding: 15px;
+            }
+            
+            .worksheet-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .client-select, .client-name-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="worksheet-container">
+        <div class="worksheet-title">Daily worksheet</div>
+        
+        <!-- Client Selection -->
+        <div class="client-selection">
+            <label>Select Client:</label>
+            <select class="client-select" id="clientSelect">
+                <option value="client1">Client 1</option>
+                <option value="client2">Client 2</option>
+                <option value="client3" selected>Client 3</option>
+                <option value="client4">Client 4</option>
+                <option value="client5">Client 5</option>
+            </select>
+        </div>
+        
+        <!-- Client Company Name -->
+        <div class="client-info">
+            <label>LOGGING</label>
+            <input type="text" class="client-name-input" id="clientCompanyName" placeholder="Client company name" value="Client 3 Pvt Ltd">
+        </div>
+        
+        <!-- Worksheet Table -->
+        <table class="worksheet-table">
+            <thead>
+                <tr>
+                    <th>PLATFORM</th>
+                    <th>TASK TYPE</th>
+                    <th>WORK DONE</th>
+                    <th>POSTER/VIDEO CREATED</th>
+                    <th>POST SCHEDULED/POSTED</th>
+                    <th>CONTENT RECEIVED</th>
+                    <th>REMARKS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Facebook Row -->
+                <tr>
+                    <td class="platform-name">Facebook</td>
+                    <td>
+                        <select class="task-type">
+                            <option value="">Select Task Type</option>
+                            <option value="posting">Page Posting</option>
+                            <option value="maintenance">Page Maintenance</option>
+                            <option value="ads">Ad Management</option>
+                            <option value="analytics">Analytics</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done">
+                            <option value="">Select Work</option>
+                            <option value="posted">Posted Content</option>
+                            <option value="scheduled">Scheduled Posts</option>
+                            <option value="created">Created Content</option>
+                            <option value="edited">Edited Content</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" placeholder="Enter remark">
+                    </td>
+                </tr>
+                
+                <!-- Instagram Row -->
+                <tr>
+                    <td class="platform-name">Instagram</td>
+                    <td>
+                        <select class="task-type">
+                            <option value="">Select Task Type</option>
+                            <option value="posting">Feed Posting</option>
+                            <option value="stories">Stories</option>
+                            <option value="reels">Reels</option>
+                            <option value="analytics">Analytics</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done">
+                            <option value="">Select Work</option>
+                            <option value="posted">Posted Content</option>
+                            <option value="stories">Posted Stories</option>
+                            <option value="reels">Created Reels</option>
+                            <option value="edited">Edited Content</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" placeholder="Enter remark">
+                    </td>
+                </tr>
+                
+                <!-- YouTube Row -->
+                <tr>
+                    <td class="platform-name">YouTube</td>
+                    <td>
+                        <select class="task-type">
+                            <option value="">Select Task Type</option>
+                            <option value="upload">Video Upload</option>
+                            <option value="editing">Video Editing</option>
+                            <option value="seo">SEO Optimization</option>
+                            <option value="analytics">Analytics</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done">
+                            <option value="">Select Work</option>
+                            <option value="uploaded">Uploaded Video</option>
+                            <option value="edited">Edited Video</option>
+                            <option value="seo">SEO Done</option>
+                            <option value="thumbnail">Created Thumbnail</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" placeholder="Enter remark">
+                    </td>
+                </tr>
+                
+                <!-- LinkedIn Row -->
+                <tr>
+                    <td class="platform-name">LinkedIn</td>
+                    <td>
+                        <select class="task-type">
+                            <option value="">Select Task Type</option>
+                            <option value="posting">Company Posting</option>
+                            <option value="articles">Articles</option>
+                            <option value="engagement">Engagement</option>
+                            <option value="analytics">Analytics</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done">
+                            <option value="">Select Work</option>
+                            <option value="posted">Posted Content</option>
+                            <option value="articles">Posted Articles</option>
+                            <option value="scheduled">Scheduled Posts</option>
+                            <option value="engagement">Engaged</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-created">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="post-scheduled">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="inprogress">In Progress</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="content-received">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" placeholder="Enter remark">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Extra Text Area -->
+        <div class="extra-section">
+            <label>text any extra :</label>
+            <textarea placeholder="Add any additional notes or comments here..."></textarea>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="submit-section">
+            <button class="submit-btn">Submit Task</button>
+        </div>
+    </div>
+
+    <script>
+        // Client data mapping
+        const clientData = {
+            'client1': 'Client 1 Company',
+            'client2': 'Client 2 Ltd',
+            'client3': 'Client 3 Pvt Ltd',
+            'client4': 'Client 4 Inc',
+            'client5': 'Client 5 Solutions'
+        };
+        
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            const clientSelect = document.getElementById('clientSelect');
+            const companyNameInput = document.getElementById('clientCompanyName');
+            
+            // Set Client 3 as default
+            clientSelect.value = 'client3';
+            companyNameInput.value = clientData['client3'];
+            
+            // Update company name when client changes
+            clientSelect.addEventListener('change', function() {
+                const selectedClient = this.value;
+                companyNameInput.value = clientData[selectedClient] || '';
+            });
+            
+            // Form submission
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.addEventListener('click', function() {
+                const selectedClient = clientSelect.options[clientSelect.selectedIndex].text;
+                const companyName = companyNameInput.value;
+                
+                // Basic validation
+                if (!companyName.trim()) {
+                    alert('Please enter client company name.');
+                    companyNameInput.focus();
+                    return;
+                }
+                
+                // Collect form data
+                const formData = {
+                    client: selectedClient,
+                    company: companyName,
+                    tasks: []
+                };
+                
+                // Collect each platform's data
+                const rows = document.querySelectorAll('.worksheet-table tbody tr');
+                rows.forEach(row => {
+                    const platform = row.querySelector('.platform-name').textContent;
+                    const taskType = row.querySelector('.task-type').value;
+                    const workDone = row.querySelector('.work-done').value;
+                    const posterCreated = row.querySelector('.poster-created').value;
+                    const postScheduled = row.querySelector('.post-scheduled').value;
+                    const contentReceived = row.querySelector('.content-received').value;
+                    const remarks = row.querySelector('.remarks-input').value;
+                    
+                    formData.tasks.push({
+                        platform,
+                        taskType,
+                        workDone,
+                        posterCreated,
+                        postScheduled,
+                        contentReceived,
+                        remarks
+                    });
+                });
+                
+                // Get extra text
+                const extraText = document.querySelector('textarea').value;
+                formData.extraNotes = extraText;
+                
+                // Show success message (in real app, you would send to server)
+                alert(`Task submitted successfully for ${companyName}!`);
+                
+                // Log data to console (for debugging)
+                console.log('Form data:', formData);
+            });
+            
+            // Add some sample data for demonstration
+            setTimeout(() => {
+                // Facebook row sample data
+                document.querySelectorAll('.task-type')[0].value = 'posting';
+                document.querySelectorAll('.work-done')[0].value = 'posted';
+                document.querySelectorAll('.poster-created')[0].value = 'yes';
+                document.querySelectorAll('.post-scheduled')[0].value = 'yes';
+                document.querySelectorAll('.content-received')[0].value = 'yes';
+                document.querySelectorAll('.remarks-input')[0].value = 'Posted weekly update';
+                
+                // Instagram row sample data
+                document.querySelectorAll('.task-type')[1].value = 'stories';
+                document.querySelectorAll('.work-done')[1].value = 'stories';
+                document.querySelectorAll('.poster-created')[1].value = 'yes';
+                document.querySelectorAll('.post-scheduled')[1].value = 'yes';
+                document.querySelectorAll('.content-received')[1].value = 'yes';
+                document.querySelectorAll('.remarks-input')[1].value = 'Posted product story';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
