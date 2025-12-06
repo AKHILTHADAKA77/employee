@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Worksheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .worksheet-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .worksheet-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .client-selection {
+            margin-bottom: 20px;
+        }
+        
+        .client-selection label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .client-select {
+            padding: 8px 12px;
+            width: 250px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        /* Company Name Container */
+        .company-container {
+            background-color: #000;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 2px solid #333;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        
+        .worksheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .worksheet-table th {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .worksheet-table td {
+            border: 1px solid #ccc;
+            padding: 12px 8px;
+            vertical-align: top;
+            background-color: white;
+        }
+        
+        .platform-name {
+            font-weight: bold;
+            color: #333;
+            width: 120px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        /* Checkbox container styling */
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 6px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            font-size: 12px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .remarks-input {
+            width: 100%;
+            min-width: 150px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        
+        .add-platform-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            float: right;
+        }
+        
+        .add-platform-btn:hover {
+            background-color: #218838;
+        }
+        
+        .remove-platform-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        
+        .remove-platform-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .extra-section {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            clear: both;
+        }
+        
+        .extra-section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+            color: #333;
+        }
+        
+        .submit-section {
+            text-align: center;
+        }
+        
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .table-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .table-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        /* Platform icon styling */
+        .platform-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            margin-right: 8px;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .facebook-icon {
+            background-color: #1877f2;
+        }
+        
+        .instagram-icon {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+        
+        .youtube-icon {
+            background-color: #ff0000;
+        }
+        
+        .linkedin-icon {
+            background-color: #0a66c2;
+        }
+        
+        .twitter-icon {
+            background-color: #1da1f2;
+        }
+        
+        .tiktok-icon {
+            background-color: #000000;
+        }
+        
+        .pinterest-icon {
+            background-color: #e60023;
+        }
+        
+        .snapchat-icon {
+            background-color: #fffc00;
+            color: black;
+        }
+        
+        .whatsapp-icon {
+            background-color: #25d366;
+        }
+        
+        .telegram-icon {
+            background-color: #0088cc;
+        }
+        
+        .reddit-icon {
+            background-color: #ff4500;
+        }
+        
+        .quora-icon {
+            background-color: #b92b27;
+        }
+        
+        .default-icon {
+            background-color: #6c757d;
+        }
+        
+        /* Work Done specific styling */
+        .work-done-option {
+            padding: 4px 0;
+        }
+        
+        /* Quick Add Section Styling */
+        .quick-add-section {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .quick-add-section.active {
+            display: block;
+        }
+        
+        .quick-add-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .quick-add-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .quick-platform-select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            background-color: white;
+            font-size: 14px;
+            min-width: 200px;
+        }
+        
+        .quick-add-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .quick-add-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .quick-cancel-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .quick-cancel-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .worksheet-container {
+                padding: 15px;
+            }
+            
+            .worksheet-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .client-select {
+                width: 100%;
+            }
+            
+            .add-platform-btn {
+                float: none;
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .table-header-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .checkbox-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-add-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .quick-platform-select {
+                min-width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="worksheet-container">
+        <div class="worksheet-title">Daily worksheet</div>
+        
+        <!-- Client Selection -->
+        <div class="client-selection">
+            <label>Select Client:</label>
+            <select class="client-select" id="clientSelect">
+                <option value="client1">Client 1</option>
+                <option value="client2">Client 2</option>
+                <option value="client3" selected>Client 3</option>
+                <option value="client4">Client 4</option>
+                <option value="client5">Client 5</option>
+            </select>
+        </div>
+        
+        <!-- Company Name Container -->
+        <div class="company-container" id="companyContainer">
+            CLIENT 3 PVT LTD
+        </div>
+        
+        <!-- Table Header with Add Button -->
+        <div class="table-header-section">
+            <div class="table-title">Platform Tasks</div>
+            <button class="add-platform-btn" id="addPlatformBtn">+ Add New Platform</button>
+        </div>
+        
+        <!-- Quick Add Section (Hidden by default) -->
+        <div class="quick-add-section" id="quickAddSection">
+            <div class="quick-add-title">Quick Add Platform:</div>
+            <div class="quick-add-controls">
+                <select class="quick-platform-select" id="quickPlatformSelect">
+                    <option value="">-- Select Platform --</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="pinterest">Pinterest</option>
+                    <option value="snapchat">Snapchat</option>
+                    <option value="whatsapp">WhatsApp Business</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="reddit">Reddit</option>
+                    <option value="quora">Quora</option>
+                    <option value="custom">Custom Platform</option>
+                </select>
+                <button class="quick-add-btn" id="quickAddBtn">Add to Table</button>
+                <button class="quick-cancel-btn" id="quickCancelBtn">Cancel</button>
+            </div>
+        </div>
+        
+        <!-- Worksheet Table -->
+        <table class="worksheet-table" id="platformsTable">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">PLATFORM</th>
+                    <th style="width: 20%;">TASK TYPE</th>
+                    <th style="width: 15%;">WORK DONE</th>
+                    <th style="width: 12%;">POSTER/VIDEO CREATED</th>
+                    <th style="width: 12%;">POST SCHEDULED/POSTED</th>
+                    <th style="width: 12%;">CONTENT RECEIVED</th>
+                    <th style="width: 14%;">REMARKS</th>
+                    <th style="width: 5%;">ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody id="platformRows">
+                <!-- Facebook Row -->
+                <tr id="row-facebook-1">
+                    <td class="platform-name">
+                        <span class="platform-icon facebook-icon">F</span>
+                        Facebook
+                    </td>
+                    <td>
+                        <select class="task-type" id="taskTypeFacebook1">
+                            <option value="">Select Task Type</option>
+                            <option value="page_posting">Page Posting</option>
+                            <option value="page_maintenance">Page Maintenance</option>
+                            <option value="ad_management">Ad Management</option>
+                            <option value="analytics">Analytics & Reporting</option>
+                            <option value="community">Community Management</option>
+                            <option value="content_creation">Content Creation</option>
+                            <option value="content_scheduling">Content Scheduling</option>
+                            <option value="story_creation">Story Creation</option>
+                            <option value="live_streaming">Live Streaming</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneFacebook1">
+                            <option value="">Select Work</option>
+                            <option value="posted_content">Posted Content</option>
+                            <option value="scheduled_posts">Scheduled Posts</option>
+                            <option value="created_content">Created Content</option>
+                            <option value="edited_content">Edited Content</option>
+                            <option value="created_ads">Created Ads</option>
+                            <option value="responded_comments">Responded to Comments</option>
+                            <option value="ran_ads">Ran Ad Campaign</option>
+                            <option value="analyzed_data">Analyzed Page Data</option>
+                            <option value="updated_profile">Updated Profile Info</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-video-created" id="posterVideoFacebook1">
+                            <option value="">Select</option>
+                            <option value="poster_yes">Poster - Yes</option>
+                            <option value="poster_no">Poster - No</option>
+                            <option value="video_yes">Video - Yes</option>
+                            <option value="video_no">Video - No</option>
+                            <option value="both_yes">Both - Yes</option>
+                            <option value="both_no">Both - No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="postScheduledFacebook1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="contentReceivedFacebook1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksFacebook1" placeholder="Enter remarks...">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('facebook-1')">×</button>
+                    </td>
+                </tr>
+                
+                <!-- Instagram Row -->
+                <tr id="row-instagram-1">
+                    <td class="platform-name">
+                        <span class="platform-icon instagram-icon">IG</span>
+                        Instagram
+                    </td>
+                    <td>
+                        <select class="task-type" id="taskTypeInstagram1">
+                            <option value="">Select Task Type</option>
+                            <option value="feed_posting">Feed Posting</option>
+                            <option value="stories_creation">Stories Creation</option>
+                            <option value="reels_creation">Reels Creation</option>
+                            <option value="analytics">Analytics & Reporting</option>
+                            <option value="engagement">Engagement Management</option>
+                            <option value="content_creation">Content Creation</option>
+                            <option value="igtv">IGTV Management</option>
+                            <option value="live">Live Streaming</option>
+                            <option value="shopping">Shopping Posts</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneInstagram1">
+                            <option value="">Select Work</option>
+                            <option value="posted_content">Posted Content</option>
+                            <option value="posted_stories">Posted Stories</option>
+                            <option value="created_reels">Created Reels</option>
+                            <option value="edited_content">Edited Content</option>
+                            <option value="uploaded_igtv">Uploaded IGTV</option>
+                            <option value="responded_comments">Responded to Comments</option>
+                            <option value="ran_ads">Ran Instagram Ads</option>
+                            <option value="analyzed_insights">Analyzed Insights</option>
+                            <option value="shopping_posts">Created Shopping Posts</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-video-created" id="posterVideoInstagram1">
+                            <option value="">Select</option>
+                            <option value="poster_yes">Poster - Yes</option>
+                            <option value="poster_no">Poster - No</option>
+                            <option value="video_yes">Video - Yes</option>
+                            <option value="video_no">Video - No</option>
+                            <option value="both_yes">Both - Yes</option>
+                            <option value="both_no">Both - No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="postScheduledInstagram1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="contentReceivedInstagram1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksInstagram1" placeholder="Enter remarks...">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('instagram-1')">×</button>
+                    </td>
+                </tr>
+                
+                <!-- YouTube Row -->
+                <tr id="row-youtube-1">
+                    <td class="platform-name">
+                        <span class="platform-icon youtube-icon">YT</span>
+                        YouTube
+                    </td>
+                    <td>
+                        <select class="task-type" id="taskTypeYouTube1">
+                            <option value="">Select Task Type</option>
+                            <option value="video_upload">Video Upload</option>
+                            <option value="video_editing">Video Editing</option>
+                            <option value="seo_optimization">SEO Optimization</option>
+                            <option value="channel_analytics">Channel Analytics</option>
+                            <option value="thumbnail_creation">Thumbnail Creation</option>
+                            <option value="description_writing">Description Writing</option>
+                            <option value="comments_management">Comments Management</option>
+                            <option value="playlist_management">Playlist Management</option>
+                            <option value="live_streaming">Live Streaming</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneYouTube1">
+                            <option value="">Select Work</option>
+                            <option value="uploaded_video">Uploaded Video</option>
+                            <option value="edited_video">Edited Video</option>
+                            <option value="seo_optimized">SEO Optimized</option>
+                            <option value="created_thumbnail">Created Thumbnail</option>
+                            <option value="updated_description">Updated Description</option>
+                            <option value="responded_comments">Responded to Comments</option>
+                            <option value="created_playlist">Created Playlist</option>
+                            <option value="live_streamed">Live Streamed</option>
+                            <option value="channel_optimized">Optimized Channel</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-video-created" id="posterVideoYouTube1">
+                            <option value="">Select</option>
+                            <option value="poster_yes">Poster - Yes</option>
+                            <option value="poster_no">Poster - No</option>
+                            <option value="video_yes">Video - Yes</option>
+                            <option value="video_no">Video - No</option>
+                            <option value="both_yes">Both - Yes</option>
+                            <option value="both_no">Both - No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="postScheduledYouTube1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="contentReceivedYouTube1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksYouTube1" placeholder="Enter remarks...">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('youtube-1')">×</button>
+                    </td>
+                </tr>
+                
+                <!-- LinkedIn Row -->
+                <tr id="row-linkedin-1">
+                    <td class="platform-name">
+                        <span class="platform-icon linkedin-icon">IN</span>
+                        LinkedIn
+                    </td>
+                    <td>
+                        <select class="task-type" id="taskTypeLinkedIn1">
+                            <option value="">Select Task Type</option>
+                            <option value="company_posting">Company Posting</option>
+                            <option value="article_writing">Article Writing</option>
+                            <option value="engagement_management">Engagement Management</option>
+                            <option value="analytics">Analytics & Reporting</option>
+                            <option value="recruitment_posting">Recruitment Posting</option>
+                            <option value="content_creation">Content Creation</option>
+                            <option value="networking">Networking</option>
+                            <option value="profile_optimization">Profile Optimization</option>
+                            <option value="job_search">Job Search Posts</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="work-done" id="workDoneLinkedIn1">
+                            <option value="">Select Work</option>
+                            <option value="posted_content">Posted Content</option>
+                            <option value="posted_articles">Posted Articles</option>
+                            <option value="scheduled_posts">Scheduled Posts</option>
+                            <option value="edited_content">Edited Content</option>
+                            <option value="engaged_network">Engaged with Network</option>
+                            <option value="posted_job">Posted Job</option>
+                            <option value="optimized_profile">Optimized Profile</option>
+                            <option value="connected_professionals">Connected with Professionals</option>
+                            <option value="analyzed_metrics">Analyzed Metrics</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="poster-video-created" id="posterVideoLinkedIn1">
+                            <option value="">Select</option>
+                            <option value="poster_yes">Poster - Yes</option>
+                            <option value="poster_no">Poster - No</option>
+                            <option value="video_yes">Video - Yes</option>
+                            <option value="video_no">Video - No</option>
+                            <option value="both_yes">Both - Yes</option>
+                            <option value="both_no">Both - No</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="postScheduledLinkedIn1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="contentReceivedLinkedIn1" placeholder="Enter status...">
+                    </td>
+                    <td>
+                        <input type="text" class="remarks-input" id="remarksLinkedIn1" placeholder="Enter remarks...">
+                    </td>
+                    <td>
+                        <button class="remove-platform-btn" onclick="removePlatform('linkedin-1')">×</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Extra Text Area -->
+        <div class="extra-section">
+            <label>text any extra :</label>
+            <textarea id="extraNotes" placeholder="Add any additional notes or comments here..."></textarea>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="submit-section">
+            <button class="submit-btn" id="submitBtn">Submit Task</button>
+        </div>
+    </div>
+
+    <!-- New Platform Modal -->
+    <div id="platformModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            <h3 style="margin-bottom: 20px; color: #333;">Add Custom Platform</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">Custom Platform Name:</label>
+                <input type="text" id="customPlatformName" placeholder="Enter custom platform name" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="cancelPlatformBtn" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                <button id="confirmPlatformBtn" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Add Platform</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Client data mapping
+        const clientData = {
+            'client1': { company: 'Client 1 Company', display: 'CLIENT 1 COMPANY' },
+            'client2': { company: 'Client 2 Ltd', display: 'CLIENT 2 LTD' },
+            'client3': { company: 'Client 3 Pvt Ltd', display: 'CLIENT 3 PVT LTD' },
+            'client4': { company: 'Client 4 Inc', display: 'CLIENT 4 INC' },
+            'client5': { company: 'Client 5 Solutions', display: 'CLIENT 5 SOLUTIONS' }
+        };
+        
+        // Platform configuration
+        const platformConfig = {
+            'facebook': { name: 'Facebook', icon: 'facebook-icon', code: 'F' },
+            'instagram': { name: 'Instagram', icon: 'instagram-icon', code: 'IG' },
+            'youtube': { name: 'YouTube', icon: 'youtube-icon', code: 'YT' },
+            'linkedin': { name: 'LinkedIn', icon: 'linkedin-icon', code: 'IN' },
+            'twitter': { name: 'Twitter', icon: 'twitter-icon', code: 'TW' },
+            'tiktok': { name: 'TikTok', icon: 'tiktok-icon', code: 'TT' },
+            'pinterest': { name: 'Pinterest', icon: 'pinterest-icon', code: 'PI' },
+            'snapchat': { name: 'Snapchat', icon: 'snapchat-icon', code: 'SC' },
+            'whatsapp': { name: 'WhatsApp Business', icon: 'whatsapp-icon', code: 'WA' },
+            'telegram': { name: 'Telegram', icon: 'telegram-icon', code: 'TG' },
+            'reddit': { name: 'Reddit', icon: 'reddit-icon', code: 'RD' },
+            'quora': { name: 'Quora', icon: 'quora-icon', code: 'QR' }
+        };
+        
+        // Counter for duplicate platforms
+        let platformCounter = {
+            'facebook': 1,
+            'instagram': 1,
+            'youtube': 1,
+            'linkedin': 1,
+            'twitter': 0,
+            'tiktok': 0,
+            'pinterest': 0,
+            'snapchat': 0,
+            'whatsapp': 0,
+            'telegram': 0,
+            'reddit': 0,
+            'quora': 0
+        };
+        
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            const clientSelect = document.getElementById('clientSelect');
+            const companyContainer = document.getElementById('companyContainer');
+            const addPlatformBtn = document.getElementById('addPlatformBtn');
+            const quickAddSection = document.getElementById('quickAddSection');
+            const quickPlatformSelect = document.getElementById('quickPlatformSelect');
+            const quickAddBtn = document.getElementById('quickAddBtn');
+            const quickCancelBtn = document.getElementById('quickCancelBtn');
+            const platformModal = document.getElementById('platformModal');
+            const cancelPlatformBtn = document.getElementById('cancelPlatformBtn');
+            const confirmPlatformBtn = document.getElementById('confirmPlatformBtn');
+            const customPlatformName = document.getElementById('customPlatformName');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Set Client 3 as default
+            clientSelect.value = 'client3';
+            updateCompanyDisplay('client3');
+            
+            // Update company display when client changes
+            clientSelect.addEventListener('change', function() {
+                const selectedClient = this.value;
+                updateCompanyDisplay(selectedClient);
+            });
+            
+            // Update company display function
+            function updateCompanyDisplay(clientId) {
+                const clientInfo = clientData[clientId];
+                if (clientInfo) {
+                    companyContainer.textContent = clientInfo.display;
+                }
+            }
+            
+            // Add Platform Button Click - Show quick add section
+            addPlatformBtn.addEventListener('click', function() {
+                quickAddSection.classList.add('active');
+                quickPlatformSelect.focus();
+            });
+            
+            // Quick Add Button Click
+            quickAddBtn.addEventListener('click', function() {
+                const platformType = quickPlatformSelect.value;
+                
+                if (!platformType) {
+                    alert('Please select a platform to add.');
+                    return;
+                }
+                
+                if (platformType === 'custom') {
+                    // Show custom platform modal
+                    quickAddSection.classList.remove('active');
+                    platformModal.style.display = 'flex';
+                    quickPlatformSelect.value = '';
+                    return;
+                }
+                
+                addPlatform(platformType);
+                
+                // Reset and hide quick add section
+                quickPlatformSelect.value = '';
+                quickAddSection.classList.remove('active');
+            });
+            
+            // Quick Cancel Button Click
+            quickCancelBtn.addEventListener('click', function() {
+                quickPlatformSelect.value = '';
+                quickAddSection.classList.remove('active');
+            });
+            
+            // Cancel Platform Addition (in modal)
+            cancelPlatformBtn.addEventListener('click', function() {
+                platformModal.style.display = 'none';
+                customPlatformName.value = '';
+            });
+            
+            // Confirm Platform Addition (in modal)
+            confirmPlatformBtn.addEventListener('click', function() {
+                const customName = customPlatformName.value.trim();
+                
+                if (!customName) {
+                    alert('Please enter a custom platform name.');
+                    return;
+                }
+                
+                // Create custom platform
+                const platformId = customName.toLowerCase().replace(/\s+/g, '_');
+                const platformName = customName;
+                const platformIcon = 'default-icon';
+                const platformCode = customName.substring(0, 2).toUpperCase();
+                
+                // Initialize counter for custom platform
+                if (!platformCounter[platformId]) {
+                    platformCounter[platformId] = 0;
+                }
+                platformCounter[platformId]++;
+                
+                const uniqueId = `${platformId}-${platformCounter[platformId]}`;
+                
+                // Add the new platform row
+                addPlatformRow(uniqueId, platformName, platformIcon, platformCode);
+                
+                // Close modal and reset
+                platformModal.style.display = 'none';
+                customPlatformName.value = '';
+            });
+            
+            // Function to add a platform
+            function addPlatform(platformType) {
+                const platformInfo = platformConfig[platformType];
+                if (platformInfo) {
+                    // Increment counter for this platform type
+                    platformCounter[platformType]++;
+                    const uniqueId = `${platformType}-${platformCounter[platformType]}`;
+                    
+                    addPlatformRow(uniqueId, platformInfo.name, platformInfo.icon, platformInfo.code);
+                }
+            }
+            
+            // Close modal when clicking outside
+            platformModal.addEventListener('click', function(e) {
+                if (e.target === platformModal) {
+                    platformModal.style.display = 'none';
+                    customPlatformName.value = '';
+                }
+            });
+            
+            // Form submission
+            submitBtn.addEventListener('click', function() {
+                const selectedClient = clientSelect.options[clientSelect.selectedIndex].text;
+                const companyName = clientData[clientSelect.value].company;
+                
+                // Collect form data
+                const formData = {
+                    client: selectedClient,
+                    company: companyName,
+                    tasks: []
+                };
+                
+                // Collect each platform's data
+                const rows = document.querySelectorAll('#platformRows tr');
+                rows.forEach(row => {
+                    const platformName = row.querySelector('.platform-name').textContent.trim();
+                    const taskType = row.querySelector('.task-type').value;
+                    const workDone = row.querySelector('.work-done').value;
+                    const posterVideoCreated = row.querySelector('.poster-video-created').value;
+                    const postScheduled = row.querySelector('input[id^="postScheduled"]').value;
+                    const contentReceived = row.querySelector('input[id^="contentReceived"]').value;
+                    const remarks = row.querySelector('input[id^="remarks"]').value;
+                    
+                    formData.tasks.push({
+                        platform: platformName,
+                        taskType,
+                        workDone,
+                        posterVideoCreated,
+                        postScheduled,
+                        contentReceived,
+                        remarks
+                    });
+                });
+                
+                // Get extra text
+                const extraText = document.getElementById('extraNotes').value;
+                formData.extraNotes = extraText;
+                
+                // Show success message
+                let message = `Task submitted successfully for ${companyName}!\n\n`;
+                message += 'Summary of tasks:\n';
+                
+                formData.tasks.forEach((task, index) => {
+                    message += `${index + 1}. ${task.platform}: ${task.taskType || 'No task type selected'}\n`;
+                    message += `   Work Done: ${task.workDone || 'No work selected'}\n`;
+                    message += `   Poster/Video: ${task.posterVideoCreated || 'Not specified'}\n`;
+                });
+                
+                alert(message);
+                
+                // Log data to console (for debugging)
+                console.log('Form data:', formData);
+            });
+            
+            // Add some sample data for demonstration
+            setTimeout(() => {
+                // Pre-select some options for demonstration
+                document.getElementById('taskTypeFacebook1').value = 'page_posting';
+                document.getElementById('workDoneFacebook1').value = 'posted_content';
+                document.getElementById('posterVideoFacebook1').value = 'poster_yes';
+                document.getElementById('postScheduledFacebook1').value = 'Scheduled for tomorrow';
+                document.getElementById('contentReceivedFacebook1').value = 'Yes, from marketing team';
+                document.getElementById('remarksFacebook1').value = 'Posted weekly update';
+                
+                document.getElementById('taskTypeInstagram1').value = 'stories_creation';
+                document.getElementById('workDoneInstagram1').value = 'posted_stories';
+                document.getElementById('posterVideoInstagram1').value = 'video_yes';
+                document.getElementById('postScheduledInstagram1').value = 'Posted immediately';
+                document.getElementById('contentReceivedInstagram1').value = 'Partial content received';
+                document.getElementById('remarksInstagram1').value = 'Posted product story';
+            }, 100);
+        });
+        
+        // Function to add a new platform row
+        function addPlatformRow(platformId, platformName, platformIcon, platformCode) {
+            const tableBody = document.getElementById('platformRows');
+            
+            // Create new row
+            const newRow = document.createElement('tr');
+            newRow.id = `row-${platformId}`;
+            
+            // Extract base platform name for ID generation
+            const basePlatformId = platformId.split('-')[0];
+            const capitalizedId = basePlatformId.charAt(0).toUpperCase() + basePlatformId.slice(1);
+            const uniqueNum = platformId.split('-')[1] || '1';
+            
+            // Generate unique IDs for this row
+            const taskTypeId = `taskType${capitalizedId}${uniqueNum}`;
+            const workDoneId = `workDone${capitalizedId}${uniqueNum}`;
+            const posterVideoId = `posterVideo${capitalizedId}${uniqueNum}`;
+            const postScheduledId = `postScheduled${capitalizedId}${uniqueNum}`;
+            const contentReceivedId = `contentReceived${capitalizedId}${uniqueNum}`;
+            const remarksId = `remarks${capitalizedId}${uniqueNum}`;
+            
+            // Set row content
+            newRow.innerHTML = `
+                <td class="platform-name">
+                    <span class="platform-icon ${platformIcon}">${platformCode}</span>
+                    ${platformName} ${uniqueNum > 1 ? `(${uniqueNum})` : ''}
+                </td>
+                <td>
+                    <select class="task-type" id="${taskTypeId}">
+                        <option value="">Select Task Type</option>
+                        <option value="posting">Page/Profile Posting</option>
+                        <option value="content_creation">Content Creation</option>
+                        <option value="engagement">Engagement Management</option>
+                        <option value="analytics">Analytics & Reporting</option>
+                        <option value="scheduling">Content Scheduling</option>
+                        <option value="advertising">Advertising</option>
+                        <option value="community">Community Management</option>
+                        <option value="optimization">Profile Optimization</option>
+                        <option value="live">Live Streaming</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="work-done" id="${workDoneId}">
+                        <option value="">Select Work</option>
+                        <option value="posted_content">Posted Content</option>
+                        <option value="created_content">Created Content</option>
+                        <option value="scheduled_posts">Scheduled Posts</option>
+                        <option value="edited_content">Edited Content</option>
+                        <option value="responded_users">Responded to Users</option>
+                        <option value="analyzed_performance">Analyzed Performance</option>
+                        <option value="optimized_profile">Optimized Profile</option>
+                        <option value="ran_campaign">Ran Campaign</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="poster-video-created" id="${posterVideoId}">
+                        <option value="">Select</option>
+                        <option value="poster_yes">Poster - Yes</option>
+                        <option value="poster_no">Poster - No</option>
+                        <option value="video_yes">Video - Yes</option>
+                        <option value="video_no">Video - No</option>
+                        <option value="both_yes">Both - Yes</option>
+                        <option value="both_no">Both - No</option>
+                        <option value="na">N/A</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="remarks-input" id="${postScheduledId}" placeholder="Enter status...">
+                </td>
+                <td>
+                    <input type="text" class="remarks-input" id="${contentReceivedId}" placeholder="Enter status...">
+                </td>
+                <td>
+                    <input type="text" class="remarks-input" id="${remarksId}" placeholder="Enter remarks...">
+                </td>
+                <td>
+                    <button class="remove-platform-btn" onclick="removePlatform('${platformId}')">×</button>
+                </td>
+            `;
+            
+            // Add row to table
+            tableBody.appendChild(newRow);
+        }
+        
+        // Function to remove a platform row
+        function removePlatform(platformId) {
+            const row = document.getElementById(`row-${platformId}`);
+            if (row) {
+                row.remove();
+            }
+        }
+    </script>
+</body>
+</html>

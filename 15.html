@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daily Client Worksheet</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body { 
+    background: linear-gradient(135deg, #f4f6f9 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .card { 
+    border-radius: 20px; 
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .form-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px 30px;
+    margin: -30px -30px 30px -30px;
+    border-radius: 20px 20px 0 0;
+    color: white;
+  }
+  .form-header h2 {
+    color: white;
+    margin-bottom: 5px;
+  }
+  .form-header p {
+    opacity: 0.9;
+    margin-bottom: 0;
+  }
+  .form-section {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .form-section h5 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f1f1;
+  }
+  .form-section h5 i {
+    margin-right: 10px;
+    color: #667eea;
+  }
+  .entry-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  .entry-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+  .entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .entry-number {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .entry-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  .entry-title {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.1rem;
+  }
+  .remove-entry {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  .remove-entry:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(255, 65, 108, 0.4);
+  }
+  .form-group label {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+  .form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+  }
+  .time-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .time-inputs input {
+    text-align: center;
+    padding: 10px;
+    width: 80px;
+  }
+  .time-inputs .form-select {
+    width: 100px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+  .btn-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border: none;
+    padding: 14px 35px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+  }
+  .client-selector {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 2px solid #e2e8f0;
+  }
+  .entries-container {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 30px;
+  }
+  .entries-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  .entries-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  .entries-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+  .entries-container::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background: #f8fafc;
+    border-radius: 15px;
+    border: 2px dashed #e2e8f0;
+    margin-bottom: 30px;
+  }
+  .empty-state i {
+    font-size: 3.5rem;
+    color: #cbd5e0;
+    margin-bottom: 15px;
+  }
+  .empty-state h5 {
+    color: #718096;
+    margin-bottom: 10px;
+  }
+  .empty-state p {
+    color: #a0aec0;
+    margin-bottom: 0;
+  }
+  .footer-actions {
+    padding-top: 25px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 20px;
+  }
+  @media (max-width: 768px) {
+    .form-section {
+      padding: 20px;
+    }
+    .entry-card {
+      padding: 20px;
+    }
+    .time-inputs {
+      flex-wrap: wrap;
+    }
+    .time-inputs input, 
+    .time-inputs .form-select {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .btn-primary, .btn-success {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+</style>
+</head>
+<body class="p-4">
+<div class="container">
+  <div class="card shadow p-0">
+    <!-- Header Section -->
+    <div class="form-header">
+      <h2><i class="fas fa-clipboard-list me-2"></i>Daily Client Worksheet</h2>
+      <p>Fill out daily activities and communications for your clients</p>
+    </div>
+
+    <div class="p-4">
+      <!-- Client Selection Section -->
+      <div class="client-selector">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label fw-bold"><i class="fas fa-user-tie me-2"></i>Select Client</label>
+              <div class="input-group">
+                <span class="input-group-text bg-primary text-white">
+                  <i class="fas fa-users"></i>
+                </span>
+                <select class="form-select" id="mainClient">
+                  <option>Client A</option>
+                  <option>Client B</option>
+                  <option>Client C</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 text-end">
+            <button class="btn btn-primary mt-md-4" id="addEntry">
+              <i class="fas fa-plus-circle me-2"></i>Add New Entry
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entries Section -->
+      <div class="form-section">
+        <h5><i class="fas fa-tasks"></i>Daily Entries</h5>
+        
+        <div id="entriesContainer" class="entries-container">
+          <!-- Entries will be added here dynamically -->
+          <div id="emptyState" class="empty-state">
+            <i class="fas fa-file-alt"></i>
+            <h5>No entries added yet</h5>
+            <p>Click "Add New Entry" to start documenting your daily activities</p>
+          </div>
+        </div>
+
+        <!-- Add Entry Button at Bottom -->
+        <div class="text-center mb-4">
+          <button class="btn btn-outline-primary" id="addEntryBottom">
+            <i class="fas fa-plus-circle me-2"></i>Add Another Entry
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="footer-actions">
+        <div class="row align-items-center">
+          <div class="col-md-6 mb-3 mb-md-0">
+            <div class="d-flex align-items-center">
+              <div class="me-3">
+                <span class="badge bg-info p-2 fs-6">
+                  <i class="fas fa-list-check me-1"></i>
+                  <span id="entryCount">0</span> Entries
+                </span>
+              </div>
+              <div>
+                <p class="mb-0">
+                  <small class="text-muted">Current Client:</small><br>
+                  <strong id="currentClient">Client A</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 text-end">
+            <div class="d-flex gap-2 justify-content-md-end">
+              <button class="btn btn-outline-danger" id="clearAll">
+                <i class="fas fa-trash-alt me-2"></i>Clear All
+              </button>
+              <button class="btn btn-success" id="submitBtn">
+                <i class="fas fa-paper-plane me-2"></i>Submit Worksheet
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Submit Modal -->
+<div class="modal fade" id="submitModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-clipboard-check me-2"></i>Submission Summary</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="summaryContent"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-2"></i>Close
+        </button>
+        <button class="btn btn-primary" id="confirmSubmit">
+          <i class="fas fa-check me-2"></i>Confirm Submission
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function todayDate(){ 
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function updateEntryCount() {
+  const count = $(".entry-card").length;
+  $("#entryCount").text(count);
+  
+  if (count === 0) {
+    $("#emptyState").removeClass("d-none");
+  } else {
+    $("#emptyState").addClass("d-none");
+  }
+}
+
+function formatTime(hour, minute, ampm) {
+  const formattedMinute = minute.toString().padStart(2, '0');
+  return `${hour}:${formattedMinute} ${ampm}`;
+}
+
+function createEntryCard(entryNumber) {
+  return `
+    <div class="entry-card" data-entry="${entryNumber}">
+      <div class="entry-header">
+        <div class="entry-number">
+          <span class="entry-badge">${entryNumber}</span>
+          <span class="entry-title">Entry #${entryNumber}</span>
+        </div>
+        <button class="remove-entry" title="Remove this entry">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="far fa-calendar me-1"></i>Date</label>
+            <input type="date" class="form-control entry-date" value="${todayDate()}">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="far fa-clock me-1"></i>Time</label>
+            <div class="time-inputs">
+              <input type="number" class="form-control hour" min="1" max="12" value="9" placeholder="HH">
+              <span class="align-self-center">:</span>
+              <input type="number" class="form-control minute" min="0" max="59" value="0" placeholder="MM">
+              <select class="form-select ampm">
+                <option>AM</option>
+                <option>PM</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-phone me-1"></i>Call Details</label>
+            <textarea class="form-control call" rows="3" placeholder="Enter call details, duration, purpose..."></textarea>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-file-alt me-1"></i>Content Description</label>
+            <textarea class="form-control content" rows="3" placeholder="Describe the content discussed or created..."></textarea>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-tag me-1"></i>Content Type</label>
+            <select class="form-select type">
+              <option value="">Select Type</option>
+              <option>Poster</option>
+              <option>Video</option>
+              <option>Banner</option>
+              <option>Flyer</option>
+              <option>Social Post</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-sticky-note me-1"></i>Additional Notes</label>
+            <textarea class="form-control notes" rows="3" placeholder="Any additional notes or follow-ups..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addEntry() {
+  const entryNumber = $(".entry-card").length + 1;
+  const entryCard = createEntryCard(entryNumber);
+  $("#entriesContainer").append(entryCard);
+  updateEntryCount();
+  scrollToBottom();
+}
+
+function scrollToBottom() {
+  $("#entriesContainer").animate({
+    scrollTop: $("#entriesContainer")[0].scrollHeight
+  }, 300);
+}
+
+// Event Handlers
+$(document).ready(function() {
+  // Update current client display
+  $("#currentClient").text($("#mainClient").val());
+  
+  // Add first entry
+  addEntry();
+});
+
+$(document).on("click", "#addEntry, #addEntryBottom", function(){ 
+  addEntry(); 
+});
+
+$(document).on("click", ".remove-entry", function(){ 
+  const entryNumber = $(this).closest(".entry-card").find(".entry-badge").text();
+  
+  if(confirm(`Are you sure you want to remove Entry #${entryNumber}?`)) {
+    $(this).closest(".entry-card").fadeOut(300, function() {
+      $(this).remove();
+      updateEntryCount();
+      
+      // Re-number remaining entries
+      $(".entry-card").each(function(index) {
+        const newNumber = index + 1;
+        $(this).attr("data-entry", newNumber);
+        $(this).find(".entry-badge").text(newNumber);
+        $(this).find(".entry-title").text(`Entry #${newNumber}`);
+      });
+    });
+  }
+});
+
+$(document).on("click", "#clearAll", function(){
+  if($(".entry-card").length > 0) {
+    if(confirm("Are you sure you want to clear all entries? This cannot be undone.")) {
+      $(".entry-card").fadeOut(300, function() {
+        $(this).remove();
+        updateEntryCount();
+        addEntry(); // Add one empty entry back
+      });
+    }
+  } else {
+    alert("There are no entries to clear.");
+  }
+});
+
+$(document).on("change", "#mainClient", function(){
+  const selectedClient = $(this).val();
+  $("#currentClient").text(selectedClient);
+});
+
+$(document).on("click", "#submitBtn", function(){
+  const selectedClient = $("#mainClient").val();
+  let entries = [];
+  let hasEmptyFields = false;
+  let emptyEntries = [];
+  
+  // Collect and validate entries
+  $(".entry-card").each(function(index) {
+    const entryNumber = index + 1;
+    const hour = $(this).find('.hour').val();
+    const minute = $(this).find('.minute').val();
+    const ampm = $(this).find('.ampm').val();
+    const call = $(this).find('.call').val();
+    const content = $(this).find('.content').val();
+    const type = $(this).find('.type').val();
+    const notes = $(this).find('.notes').val();
+    const date = $(this).find('.entry-date').val();
+    
+    // Check for required fields
+    if(!date || !hour || !minute || !type) {
+      hasEmptyFields = true;
+      emptyEntries.push(entryNumber);
+      $(this).addClass('border-danger');
+    } else {
+      $(this).removeClass('border-danger');
+    }
+    
+    let entry = { 
+      number: entryNumber,
+      client: selectedClient,
+      date: date,
+      time: formatTime(hour, minute, ampm),
+      call: call || 'Not specified',
+      content: content || 'Not specified',
+      type: type || 'Not specified',
+      notes: notes || 'No notes'
+    };
+    entries.push(entry);
+  });
+  
+  if(hasEmptyFields) {
+    alert(`Please fill in all required fields (Date, Time, and Type) for entries: ${emptyEntries.join(', ')}`);
+    return;
+  }
+  
+  if(entries.length === 0) {
+    alert("No entries to submit. Please add at least one entry.");
+    return;
+  }
+  
+  // Build summary
+  let summaryHTML = `
+    <div class="alert alert-success">
+      <i class="fas fa-check-circle me-2"></i>
+      <strong>Ready to Submit!</strong><br>
+      Client: <strong>${selectedClient}</strong> | 
+      Total Entries: <strong>${entries.length}</strong> | 
+      Date: <strong>${todayDate()}</strong>
+    </div>
+    <div class="summary-entries">`;
+  
+  entries.forEach((entry) => {
+    const typeColors = {
+      'Poster': 'primary',
+      'Video': 'danger', 
+      'Banner': 'warning',
+      'Flyer': 'info',
+      'Social Post': 'success',
+      'Other': 'secondary'
+    };
+    const badgeColor = typeColors[entry.type] || 'secondary';
+    
+    summaryHTML += `
+      <div class="card mb-3 border">
+        <div class="card-header bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="badge bg-${badgeColor} me-2">${entry.type}</span>
+              <strong>Entry #${entry.number}</strong>
+            </div>
+            <small class="text-muted">${entry.date} at ${entry.time}</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong><i class="fas fa-phone me-1"></i>Call:</strong><br>${entry.call}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong><i class="fas fa-file-alt me-1"></i>Content:</strong><br>${entry.content}</p>
+            </div>
+          </div>
+          <div class="mt-2">
+            <p><strong><i class="fas fa-sticky-note me-1"></i>Notes:</strong><br>${entry.notes}</p>
+          </div>
+        </div>
+      </div>`;
+  });
+  
+  summaryHTML += `</div>`;
+  $("#summaryContent").html(summaryHTML);
+  
+  // Show modal
+  new bootstrap.Modal(document.getElementById('submitModal')).show();
+});
+
+$(document).on("click", "#confirmSubmit", function(){
+  const selectedClient = $("#mainClient").val();
+  const entryCount = $(".entry-card").length;
+  
+  // Show success message
+  $("#summaryContent").html(`
+    <div class="text-center py-5">
+      <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+      <h3 class="mt-4 text-success">Worksheet Submitted Successfully!</h3>
+      <p class="lead">${entryCount} entries submitted for <strong>${selectedClient}</strong></p>
+      <p class="text-muted">Submitted on: ${todayDate()}</p>
+      <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Your worksheet has been saved and submitted successfully.
+      </div>
+    </div>
+  `);
+  
+  // Change modal buttons
+  $(".modal-footer").html(`
+    <button class="btn btn-success" data-bs-dismiss="modal">
+      <i class="fas fa-check me-2"></i>Done
+    </button>
+  `);
+  
+  // Optional: Clear form after successful submission
+  setTimeout(() => {
+    $(".entry-card").remove();
+    updateEntryCount();
+    addEntry();
+  }, 2000);
+});
+</script>
+</body>
+</html>

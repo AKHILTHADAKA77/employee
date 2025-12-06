@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daily Client Worksheet</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body { 
+    background: linear-gradient(135deg, #f4f6f9 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .card { 
+    border-radius: 20px; 
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .modal-content { border-radius: 20px; }
+  .table-container {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    background: white;
+    margin-bottom: 20px;
+  }
+  .table-responsive {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 12px;
+  }
+  .table-responsive::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .table thead th {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 15px 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+    border-color: #edf2f7;
+  }
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  .table tbody tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .table tbody tr:nth-child(even):hover {
+    background-color: #f8f9fa;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+  .btn-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    border: none;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  .btn-danger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(255, 65, 108, 0.4);
+  }
+  .form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  .input-group {
+    gap: 5px;
+  }
+  .input-group .form-control {
+    text-align: center;
+    padding: 8px 5px;
+  }
+  .input-group .form-select {
+    padding: 8px 12px;
+  }
+  textarea.form-control {
+    resize: vertical;
+    min-height: 70px;
+  }
+  h2 {
+    color: #2c3e50;
+    font-weight: 700;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 15px;
+  }
+  h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+  }
+  .card-header-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px 30px;
+    margin: -30px -30px 30px -30px;
+    border-radius: 20px 20px 0 0;
+  }
+  .card-header-section h2 {
+    color: white;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .card-header-section h2:after {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    .table-responsive {
+      max-height: 400px;
+    }
+    .table thead th, 
+    .table tbody td {
+      padding: 10px 8px;
+      font-size: 0.85rem;
+    }
+    .btn-primary, .btn-success {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+    }
+    .input-group {
+      flex-wrap: nowrap;
+    }
+    .input-group .form-control,
+    .input-group .form-select {
+      font-size: 0.8rem;
+      padding: 6px 4px;
+    }
+    textarea.form-control {
+      min-height: 60px;
+      font-size: 0.85rem;
+    }
+  }
+  @media (max-width: 576px) {
+    body {
+      padding: 10px;
+    }
+    .card {
+      padding: 20px 15px !important;
+    }
+    .card-header-section {
+      padding: 20px 15px;
+      margin: -20px -15px 20px -15px;
+    }
+    .table-responsive {
+      max-height: 350px;
+    }
+    .row.align-items-center {
+      flex-direction: column;
+    }
+    .col-md-6 {
+      width: 100%;
+    }
+    .col-md-6.text-end {
+      text-align: left !important;
+      margin-top: 15px;
+    }
+    .btn-primary {
+      width: 100%;
+    }
+  }
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+  }
+  .empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body class="p-4">
+<div class="container">
+  <div class="card shadow p-4">
+    <div class="card-header-section">
+      <h2 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Daily Client Worksheet</h2>
+    </div>
+    
+    <!-- Client selection and add button row -->
+    <div class="row align-items-center mb-4">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label fw-bold">Select Client</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+            <select class="form-select" id="mainClient">
+              <option>Client A</option>
+              <option>Client B</option>
+              <option>Client C</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 text-end">
+        <button class="btn btn-primary" id="addRow">
+          <i class="fas fa-plus-circle me-2"></i>Add New Row
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable Table Container -->
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="worksheetTable">
+          <thead class="table-dark">
+            <tr>
+              <th width="12%">Date</th>
+              <th width="15%">Time</th>
+              <th width="18%">Call</th>
+              <th width="18%">Content</th>
+              <th width="12%">Type</th>
+              <th width="18%">Notes</th>
+              <th width="7%" class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be inserted here -->
+          </tbody>
+        </table>
+        <div id="emptyTableMessage" class="empty-state d-none">
+          <i class="fas fa-table"></i>
+          <h5>No entries yet</h5>
+          <p>Click "Add New Row" to start adding entries</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 pt-3 border-top">
+      <div class="mb-3 mb-md-0">
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <span class="badge bg-info p-2">
+              <i class="fas fa-users me-1"></i>
+              <span id="rowCount">0</span> Entries
+            </span>
+          </div>
+          <div>
+            <small class="text-muted">Client: <span id="currentClient" class="fw-bold text-dark">Client A</span></small>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" id="clearAll">
+          <i class="fas fa-eraser me-2"></i>Clear All
+        </button>
+        <button class="btn btn-success" id="submitBtn">
+          <i class="fas fa-paper-plane me-2"></i>Submit Worksheet
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Submit Modal -->
+<div class="modal fade" id="submitModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-clipboard-check me-2"></i>Submission Summary</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="summaryContent">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          All entries below are for client: <strong id="summaryClient"></strong>
+        </div>
+        <div id="summaryEntries"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-2"></i>Close
+        </button>
+        <button class="btn btn-primary" id="confirmSubmit">
+          <i class="fas fa-check me-2"></i>Confirm Submission
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function todayDate(){ 
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function updateRowCount() {
+  const count = $("#worksheetTable tbody tr").length;
+  $("#rowCount").text(count);
+  
+  if (count === 0) {
+    $("#emptyTableMessage").removeClass("d-none");
+    $(".table-responsive thead").addClass("d-none");
+  } else {
+    $("#emptyTableMessage").addClass("d-none");
+    $(".table-responsive thead").removeClass("d-none");
+  }
+}
+
+function formatTime(hour, minute, ampm) {
+  const formattedMinute = minute.toString().padStart(2, '0');
+  return `${hour}:${formattedMinute} ${ampm}`;
+}
+
+function addRow(){
+  const row = `
+    <tr>
+      <td>
+        <input type="date" class="form-control date" value="${todayDate()}">
+      </td>
+      <td>
+        <div class="d-flex gap-1 align-items-center">
+          <input type="number" class="form-control hour text-center" min="1" max="12" value="9" placeholder="HH" style="width: 60px;">
+          <span class="fw-bold">:</span>
+          <input type="number" class="form-control minute text-center" min="0" max="59" value="0" placeholder="MM" style="width: 60px;">
+          <select class="form-select ampm" style="width: 80px;">
+            <option>AM</option>
+            <option>PM</option>
+          </select>
+        </div>
+      </td>
+      <td><textarea class="form-control call" rows="2" placeholder="Call details..."></textarea></td>
+      <td><textarea class="form-control content" rows="2" placeholder="Content description..."></textarea></td>
+      <td>
+        <select class="form-select type">
+          <option value="">Select Type</option>
+          <option>Poster</option>
+          <option>Video</option>
+          <option>Banner</option>
+          <option>Flyer</option>
+          <option>Social Post</option>
+          <option>Other</option>
+        </select>
+      </td>
+      <td><textarea class="form-control notes" rows="2" placeholder="Additional notes..."></textarea></td>
+      <td class="text-center">
+        <button class="btn btn-danger btn-sm removeRow" title="Remove this row">
+          <i class="fas fa-times"></i>
+        </button>
+      </td>
+    </tr>`;
+  $("#worksheetTable tbody").append(row);
+  updateRowCount();
+}
+
+$(document).on("click", "#addRow", function(){ 
+  addRow(); 
+});
+
+$(document).on("click", ".removeRow", function(){ 
+  const rowNumber = $(this).closest("tr").index() + 1;
+  
+  if(confirm(`Are you sure you want to remove Row ${rowNumber}?`)) {
+    $(this).closest("tr").fadeOut(300, function() {
+      $(this).remove();
+      updateRowCount();
+    });
+  }
+});
+
+$(document).on("click", "#clearAll", function(){
+  if($("#worksheetTable tbody tr").length > 0) {
+    if(confirm("Are you sure you want to clear all rows? This cannot be undone.")) {
+      $("#worksheetTable tbody").empty();
+      updateRowCount();
+      setTimeout(() => {
+        addRow();
+      }, 300);
+    }
+  } else {
+    alert("The table is already empty.");
+  }
+});
+
+$(document).on("change", "#mainClient", function(){
+  const selectedClient = $(this).val();
+  $("#currentClient").text(selectedClient);
+});
+
+$(document).on("click", "#submitBtn", function(){
+  const selectedClient = $("#mainClient").val();
+  let data = [];
+  let hasEmptyFields = false;
+  let emptyFieldsList = [];
+  
+  // Collect data and validate
+  $("#worksheetTable tbody tr").each(function(index){
+    const hour = $(this).find('.hour').val();
+    const minute = $(this).find('.minute').val();
+    const ampm = $(this).find('.ampm').val();
+    const call = $(this).find('.call').val();
+    const content = $(this).find('.content').val();
+    const type = $(this).find('.type').val();
+    const notes = $(this).find('.notes').val();
+    const date = $(this).find('.date').val();
+    
+    // Check for required fields
+    if(!date || !hour || !minute || !type) {
+      hasEmptyFields = true;
+      emptyFieldsList.push(index + 1);
+      $(this).addClass('table-warning');
+    } else {
+      $(this).removeClass('table-warning');
+    }
+    
+    let row = { 
+      client: selectedClient,
+      date: date,
+      time: formatTime(hour, minute, ampm),
+      call: call || 'Not specified',
+      content: content || 'Not specified',
+      type: type || 'Not specified',
+      notes: notes || 'No notes'
+    };
+    data.push(row);
+  });
+  
+  if(hasEmptyFields) {
+    alert(`Please fill in all required fields (Date, Time, and Type) for rows: ${emptyFieldsList.join(', ')}`);
+    return;
+  }
+  
+  if(data.length === 0) {
+    alert("No data to submit. Please add at least one row.");
+    return;
+  }
+  
+  // Build summary
+  $("#summaryClient").text(selectedClient);
+  let summaryHTML = `<div class="alert alert-success">
+    <i class="fas fa-check-circle me-2"></i>
+    <strong>Ready to Submit!</strong><br>
+    Client: <strong>${selectedClient}</strong> | 
+    Total Entries: <strong>${data.length}</strong> | 
+    Date: <strong>${todayDate()}</strong>
+  </div>`;
+  
+  summaryHTML += `<div class="list-group">`;
+  
+  data.forEach((d,i)=>{
+    const typeColors = {
+      'Poster': 'primary',
+      'Video': 'danger', 
+      'Banner': 'warning',
+      'Flyer': 'info',
+      'Social Post': 'success',
+      'Other': 'secondary'
+    };
+    const badgeColor = typeColors[d.type] || 'secondary';
+    
+    summaryHTML += `
+      <div class="list-group-item mb-2 border rounded">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="me-3">
+            <span class="badge bg-${badgeColor} me-2">${d.type}</span>
+            <strong>Entry ${i+1}</strong>
+          </div>
+          <small class="text-muted">${d.date} at ${d.time}</small>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <div class="mb-1"><strong><i class="fas fa-phone me-1"></i>Call:</strong> ${d.call}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-1"><strong><i class="fas fa-file-alt me-1"></i>Content:</strong> ${d.content}</div>
+          </div>
+        </div>
+        <div class="mt-2">
+          <strong><i class="fas fa-sticky-note me-1"></i>Notes:</strong> ${d.notes}
+        </div>
+      </div>`;
+  });
+  
+  summaryHTML += `</div>`;
+  $("#summaryEntries").html(summaryHTML);
+  
+  // Show modal
+  new bootstrap.Modal(document.getElementById('submitModal')).show();
+});
+
+$(document).on("click", "#confirmSubmit", function(){
+  // Simulate submission
+  const selectedClient = $("#mainClient").val();
+  const rowCount = $("#worksheetTable tbody tr").length;
+  
+  // Show success message
+  $("#summaryContent").html(`
+    <div class="text-center py-5">
+      <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+      <h3 class="mt-4 text-success">Worksheet Submitted Successfully!</h3>
+      <p class="lead">${rowCount} entries submitted for <strong>${selectedClient}</strong></p>
+      <p class="text-muted">Date: ${todayDate()}</p>
+      <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Your worksheet has been saved and submitted.
+      </div>
+    </div>
+  `);
+  
+  // Change modal buttons
+  $(".modal-footer").html(`
+    <button class="btn btn-success" data-bs-dismiss="modal">
+      <i class="fas fa-check me-2"></i>Done
+    </button>
+  `);
+  
+  // Optional: Clear form after successful submission
+  setTimeout(() => {
+    $("#worksheetTable tbody").empty();
+    updateRowCount();
+    addRow();
+  }, 3000);
+});
+
+// Initialize on page load
+$(document).ready(function() {
+  addRow();
+  addRow(); // Add two rows by default
+  $("#currentClient").text($("#mainClient").val());
+  
+  // Initialize time inputs
+  $(document).on('focus', '.hour, .minute', function() {
+    $(this).select();
+  });
+  
+  // Real-time validation
+  $(document).on('blur', '.date, .hour, .minute, .type', function() {
+    const row = $(this).closest('tr');
+    const date = row.find('.date').val();
+    const hour = row.find('.hour').val();
+    const minute = row.find('.minute').val();
+    const type = row.find('.type').val();
+    
+    if(date && hour && minute && type) {
+      row.removeClass('table-warning');
+    }
+  });
+});
+</script>
+</body>
+</html>

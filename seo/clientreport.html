@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daily Client Worksheet — Modern Dashboard</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent-1: #667EEA;
+      --accent-2: #764BA2;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --glass: rgba(255,255,255,0.6);
+      --radius: 14px;
+      --shadow: 0 8px 30px rgba(33,37,41,0.06);
+      --transition-fast: 200ms;
+    }
+
+    /* Dark theme overrides (applies when body has .dark) */
+    body.dark {
+      --bg: #0f1724;
+      --card: #0b1220;
+      --muted: #9aa4b2;
+      --glass: rgba(255,255,255,0.03);
+      --shadow: 0 10px 30px rgba(2,6,23,0.7);
+    }
+
+    html,body{
+      height:100%;
+      background: linear-gradient(180deg, var(--bg), #e9eef8 120%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      color: #0f1724;
+      margin:0;
+      padding:0;
+    }
+
+    body.dark { color: #e6eef8; }
+
+    /* Layout */
+    .app {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 24px;
+      padding: 28px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 992px) {
+      .app { grid-template-columns: 1fr; padding: 14px; }
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), var(--glass));
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 28px;
+      border: 1px solid rgba(99,102,241,0.06);
+    }
+
+    .logo {
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo .brand {
+      font-weight:700; font-size:1.05rem;
+      color: var(--accent-2);
+    }
+    .sidebar .section {
+      margin-top:18px;
+    }
+    .sidebar .small { color: var(--muted); font-size:0.85rem; }
+
+    /* Main content */
+    .content {
+      min-height: 80vh;
+    }
+
+    .topbar {
+      display:flex; justify-content:space-between; gap:12px; align-items:center;
+      margin-bottom:18px;
+    }
+
+    .topbar .title {
+      font-size:1.25rem; font-weight:700;
+    }
+    .topbar .subtitle { color: var(--muted); font-size:0.95rem; }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: none;
+    }
+
+    .form-section {
+      margin-bottom: 18px;
+    }
+
+    /* Entry cards */
+    .entries-container {
+      display:flex; flex-direction:column; gap:14px;
+      max-height: 520px; overflow:auto; padding-right:10px;
+    }
+
+    .entry {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), var(--card));
+      border-radius: 12px; padding: 14px; border: 1px solid rgba(15,23,36,0.04);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+      box-shadow: 0 6px 18px rgba(15,23,36,0.04);
+      position: relative;
+    }
+    body.dark .entry { background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); border-color: rgba(255,255,255,0.03); }
+
+    .entry:hover { transform: translateY(-6px); box-shadow: 0 14px 42px rgba(2,6,23,0.12); }
+
+    .entry .meta {
+      display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px;
+    }
+
+    .badge-type {
+      padding:6px 10px; border-radius:999px; font-size:0.8rem; font-weight:600;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      color: white;
+      box-shadow: 0 6px 18px rgba(102,126,234,0.12);
+    }
+
+    .entry .remove-btn {
+      border:none; background: transparent; color:var(--danger); font-size:1.05rem;
+      width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px;
+      transition: transform var(--transition-fast);
+    }
+    .entry .remove-btn:hover { transform: scale(1.06); }
+
+    .entry .fields { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media (max-width: 768px) { .entry .fields { grid-template-columns: 1fr; } }
+
+    .entry .time-row { display:flex; gap:8px; align-items:center; }
+    .entry .time-row input[type="number"] { width:80px; }
+
+    .empty-state {
+      text-align:center; padding:36px; border-radius:12px; border:2px dashed rgba(15,23,36,0.05);
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), transparent);
+    }
+
+    .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+    .floating-add {
+      position: fixed; right: 20px; bottom: 24px;
+      z-index: 1050;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+    }
+
+    .muted { color: var(--muted); font-size:0.9rem; }
+
+    /* Small helpers */
+    .small-ghost {
+      border:1px dashed rgba(15,23,36,0.05); padding:8px 10px; border-radius:10px; background:transparent;
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: white; color: black; }
+      .sidebar, .floating-add, .top-actions { display:none !important; }
+      .app { grid-template-columns: 1fr; padding:0; max-width:100%; }
+      .entries-container { max-height:none; }
+      .card { box-shadow:none; border-radius:0; border:0; padding:0; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo mb-3">
+        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;box-shadow:0 6px 18px rgba(15,23,36,0.06);">
+          <i class="fas fa-clipboard-list" style="color:var(--accent-2);font-size:20px"></i>
+        </div>
+        <div>
+          <div class="brand">Daily Worksheet</div>
+          <div class="small">Client activity tracker</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <label class="form-label fw-bold small mb-1">Select Client</label>
+        <select id="mainClient" class="form-select mb-2" aria-label="Select client">
+          <option>Client A</option>
+          <option>Client B</option>
+          <option>Client C</option>
+          <option>Other</option>
+        </select>
+
+        <div class="d-flex gap-2 mb-2">
+          <button id="addEntrySidebar" class="btn btn-outline-primary w-100"><i class="fa fa-plus me-2"></i>New Entry</button>
+        </div>
+
+        <div class="mt-3 small-ghost">
+          <div class="muted">Entries</div>
+          <div class="d-flex align-items-center justify-content-between mt-2">
+            <div><strong id="entryCount">0</strong> Items</div>
+            <div class="muted small" id="clientDisplay">Client A</div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <div class="muted mb-1">Quick actions</div>
+          <div class="d-grid gap-2">
+            <button id="exportJSON" class="btn btn-sm btn-outline-secondary"><i class="fa fa-file-export me-2"></i>Export JSON</button>
+            <button id="printBtn" class="btn btn-sm btn-outline-secondary"><i class="fa fa-print me-2"></i>Export / Print</button>
+            <button id="clearAll" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash me-2"></i>Clear All</button>
+          </div>
+        </div>
+
+        <div class="section mt-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="muted">Theme</div>
+            <div>
+              <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle dark mode"><i class="fa fa-moon"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section mt-4 muted small">
+          <div><strong>Shortcuts</strong></div>
+          <ul class="ps-3 mt-2">
+            <li>Ctrl + N — New entry</li>
+            <li>Ctrl + Enter — Submit</li>
+          </ul>
+        </div>
+
+        <div class="section mt-4 muted small">
+          <div><strong>Autosave</strong></div>
+          <div class="mt-2">Changes are saved automatically to your browser.</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <div class="topbar">
+        <div>
+          <div class="title">Daily Client Worksheet</div>
+          <div class="subtitle">Log calls, content and notes — organized for quick reporting.</div>
+        </div>
+
+        <div class="top-actions controls">
+          <div class="me-2">Date: <strong id="todayDate"></strong></div>
+          <button id="submitBtn" class="btn btn-primary"><i class="fa fa-paper-plane me-2"></i>Submit</button>
+        </div>
+      </div>
+
+      <div class="card form-section" role="region" aria-labelledby="entriesHeading">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h5 id="entriesHeading" class="mb-0">Daily Entries</h5>
+            <div class="muted">Add multiple entries for the selected client.</div>
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            <button id="addEntry" class="btn btn-outline-primary d-none d-md-inline"><i class="fa fa-plus me-2"></i>Add Entry</button>
+            <div class="muted small">Current Client: <strong id="currentClient">Client A</strong></div>
+          </div>
+        </div>
+
+        <div id="entriesContainer" class="entries-container">
+          <div id="emptyState" class="empty-state">
+            <i class="fa fa-file-alt fa-3x text-muted mb-3"></i>
+            <h5 class="mb-1">No entries yet</h5>
+            <p class="muted mb-0">Click "Add Entry" or use <kbd>Ctrl + N</kbd> to create your first record.</p>
+          </div>
+        </div>
+
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <div class="muted small">Tip: fill Date, Time and Content Type before submitting.</div>
+          <div class="d-flex gap-2">
+            <button id="exportJSONBottom" class="btn btn-outline-secondary btn-sm"><i class="fa fa-download me-1"></i>Export JSON</button>
+            <button id="printBtnBottom" class="btn btn-outline-secondary btn-sm"><i class="fa fa-file-pdf me-1"></i>Print / PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submission summary modal (bootstrap modal content will be injected) -->
+      <!-- Success modal -->
+      <div class="modal fade" id="submitModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"><i class="fa fa-clipboard-check me-2"></i>Submission Summary</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="summaryContent"></div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button id="confirmSubmit" type="button" class="btn btn-primary">Confirm Submission</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+          <div class="modal-content text-center p-3">
+            <div class="modal-body">
+              <div style="font-size:48px;color:var(--success)"><i class="fa fa-check-circle"></i></div>
+              <h5 class="mt-2">Worksheet Submitted!</h5>
+              <p class="muted mb-0">Submitted for <strong id="submittedClient">Client A</strong>.</p>
+            </div>
+            <div class="modal-footer justify-content-center border-0">
+              <button type="button" class="btn btn-success" data-bs-dismiss="modal">Start New</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Floating Add (mobile) -->
+  <button id="floatingAdd" class="btn btn-primary rounded-circle p-3 floating-add d-md-none" aria-label="Add entry">
+    <i class="fa fa-plus" style="font-size:18px"></i>
+  </button>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /******************************
+     * Modern Daily Worksheet JS
+     ******************************/
+    (function () {
+      // Utilities
+      const qs = s => document.querySelector(s);
+      const qsa = s => Array.from(document.querySelectorAll(s));
+      const today = () => {
+        const d = new Date();
+        return d.toISOString().slice(0,10);
+      };
+      // Initial DOM refs
+      const entriesContainer = qs('#entriesContainer');
+      const entryCountEl = qs('#entryCount');
+      const mainClient = qs('#mainClient');
+      const currentClient = qs('#currentClient');
+      const clientDisplay = qs('#clientDisplay');
+      const todayDateEl = qs('#todayDate');
+      const emptyState = qs('#emptyState');
+
+      // Persistent storage key
+      const STORAGE_KEY = 'dailyWorksheet.v1';
+
+      // State
+      let entries = []; // array of entry objects
+
+      // Default entry factory
+      function createEntryObject() {
+        return {
+          date: today(),
+          hour: '09',
+          minute: '00',
+          ampm: 'AM',
+          call: '',
+          content: '',
+          type: '',
+          notes: ''
+        };
+      }
+
+      // Render helpers
+      function render() {
+        // Clear
+        entriesContainer.innerHTML = '';
+
+        if (entries.length === 0) {
+          entriesContainer.appendChild(emptyState);
+          emptyState.classList.remove('d-none');
+        } else {
+          emptyState.classList.add('d-none');
+        }
+
+        // Render each entry card
+        entries.forEach((entry, idx) => {
+          const el = document.createElement('div');
+          el.className = 'entry';
+          el.dataset.index = idx;
+
+          el.innerHTML = `
+            <div class="meta">
+              <div style="display:flex;gap:12px;align-items:center">
+                <div style="display:flex;flex-direction:column">
+                  <div style="font-weight:700">Entry #${idx + 1}</div>
+                  <div class="muted small">${entry.date} • ${formatTime(entry.hour, entry.minute, entry.ampm)}</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <span class="badge-type">${entry.type || 'No Type'}</span>
+                <button class="remove-btn" title="Remove entry" aria-label="Remove entry"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+
+            <div class="fields">
+              <div>
+                <label class="form-label small mb-1">Date</label>
+                <input type="date" class="form-control form-control-sm entry-date" value="${entry.date}">
+              </div>
+
+              <div>
+                <label class="form-label small mb-1">Time</label>
+                <div class="time-row">
+                  <input type="number" min="1" max="12" class="form-control form-control-sm hour" value="${entry.hour.padStart ? entry.hour.padStart(2,'0') : entry.hour}">
+                  <span class="muted">:</span>
+                  <input type="number" min="0" max="59" class="form-control form-control-sm minute" value="${entry.minute.padStart ? entry.minute.padStart(2,'0') : entry.minute}">
+                  <select class="form-select form-select-sm ampm">
+                    <option ${entry.ampm === 'AM' ? 'selected' : ''}>AM</option>
+                    <option ${entry.ampm === 'PM' ? 'selected' : ''}>PM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label small mb-1">Call Details</label>
+                <textarea class="form-control form-control-sm call" rows="2" placeholder="Call details, duration">${escapeHtml(entry.call)}</textarea>
+              </div>
+
+              <div>
+                <label class="form-label small mb-1">Content Description</label>
+                <textarea class="form-control form-control-sm content" rows="2" placeholder="Describe content discussed or created">${escapeHtml(entry.content)}</textarea>
+              </div>
+
+              <div>
+                <label class="form-label small mb-1">Content Type</label>
+                <select class="form-select form-select-sm type">
+                  <option value="">Select Type</option>
+                  <option ${entry.type === 'Poster' ? 'selected' : ''}>Poster</option>
+                  <option ${entry.type === 'Video' ? 'selected' : ''}>Video</option>
+                  <option ${entry.type === 'Banner' ? 'selected' : ''}>Banner</option>
+                  <option ${entry.type === 'Flyer' ? 'selected' : ''}>Flyer</option>
+                  <option ${entry.type === 'Social Post' ? 'selected' : ''}>Social Post</option>
+                  <option ${entry.type === 'Other' ? 'selected' : ''}>Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label small mb-1">Additional Notes</label>
+                <textarea class="form-control form-control-sm notes" rows="2" placeholder="Notes or follow-ups">${escapeHtml(entry.notes)}</textarea>
+              </div>
+            </div>
+          `;
+
+          // Attach handlers for inputs inside this entry element
+          attachEntryHandlers(el, idx);
+          entriesContainer.appendChild(el);
+        });
+
+        // Update counts and displays
+        entryCountEl.textContent = entries.length;
+        currentClient.textContent = mainClient.value;
+        clientDisplay.textContent = mainClient.value;
+        todayDateEl.textContent = today();
+      }
+
+      // Attach change handlers inside an entry element
+      function attachEntryHandlers(entryEl, index) {
+        // Using event delegation is fine, but we directly bind for clarity:
+        const dateEl = entryEl.querySelector('.entry-date');
+        const hourEl = entryEl.querySelector('.hour');
+        const minuteEl = entryEl.querySelector('.minute');
+        const ampmEl = entryEl.querySelector('.ampm');
+        const callEl = entryEl.querySelector('.call');
+        const contentEl = entryEl.querySelector('.content');
+        const typeEl = entryEl.querySelector('.type');
+        const notesEl = entryEl.querySelector('.notes');
+        const removeBtn = entryEl.querySelector('.remove-btn');
+        const badge = entryEl.querySelector('.badge-type');
+
+        // Update state helpers
+        const onChange = () => {
+          entries[index].date = dateEl.value;
+          entries[index].hour = String(hourEl.value).padStart(2,'0');
+          entries[index].minute = String(minuteEl.value).padStart(2,'0');
+          entries[index].ampm = ampmEl.value;
+          entries[index].call = callEl.value;
+          entries[index].content = contentEl.value;
+          entries[index].type = typeEl.value;
+          entries[index].notes = notesEl.value;
+          badge.textContent = entries[index].type || 'No Type';
+          save(); // autosave
+        };
+
+        dateEl.addEventListener('change', onChange);
+        hourEl.addEventListener('input', onChange);
+        minuteEl.addEventListener('input', onChange);
+        ampmEl.addEventListener('change', onChange);
+        callEl.addEventListener('input', onChange);
+        contentEl.addEventListener('input', onChange);
+        typeEl.addEventListener('change', onChange);
+        notesEl.addEventListener('input', onChange);
+
+        removeBtn.addEventListener('click', () => {
+          if (!confirm(`Remove Entry #${index + 1}?`)) return;
+          entries.splice(index, 1);
+          render();
+          save();
+        });
+      }
+
+      // Time formatting
+      function formatTime(h, m, ampm) {
+        const hh = String(h).padStart(2,'0');
+        const mm = String(m).padStart(2,'0');
+        return `${hh}:${mm} ${ampm}`;
+      }
+
+      // Add a new entry (push and render)
+      function addEntry() {
+        entries.push(createEntryObject());
+        render();
+        save();
+        // scroll to bottom
+        setTimeout(() => {
+          entriesContainer.scrollTop = entriesContainer.scrollHeight;
+        }, 120);
+      }
+
+      // Clear all entries
+      function clearAll() {
+        if (!confirm('Clear all entries? This cannot be undone.')) return;
+        entries = [];
+        render();
+        save();
+      }
+
+      // Save to localStorage
+      function save() {
+        const payload = {
+          client: mainClient.value,
+          entries,
+          lastSaved: new Date().toISOString()
+        };
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (e) {
+          console.warn('Could not save to localStorage', e);
+        }
+      }
+
+      // Load from localStorage
+      function load() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return false;
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.entries)) {
+            entries = parsed.entries;
+            mainClient.value = parsed.client || mainClient.value;
+            return true;
+          }
+        } catch (e) {
+          console.warn('Could not parse saved data', e);
+        }
+        return false;
+      }
+
+      // Build summary HTML for modal
+      function buildSummary() {
+        if (entries.length === 0) {
+          return `<div class="alert alert-warning">No entries to submit.</div>`;
+        }
+        let html = `<div class="mb-3"><strong>Client:</strong> ${escapeHtml(mainClient.value)} &nbsp; • &nbsp; <strong>Entries:</strong> ${entries.length}</div>`;
+        html += '<div style="max-height:420px;overflow:auto;padding-right:8px">';
+        entries.forEach((e, i) => {
+          html += `
+            <div class="card mb-2">
+              <div class="card-body p-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <div><strong>Entry #${i+1}</strong> • <small class="text-muted">${e.date} ${formatTime(e.hour,e.minute,e.ampm)}</small></div>
+                  <div><span class="badge bg-secondary">${escapeHtml(e.type || 'No Type')}</span></div>
+                </div>
+                <div class="mb-1"><strong>Call:</strong> ${escapeHtml(e.call || 'Not specified')}</div>
+                <div class="mb-1"><strong>Content:</strong> ${escapeHtml(e.content || 'Not specified')}</div>
+                <div class="mb-0"><strong>Notes:</strong> ${escapeHtml(e.notes || '—')}</div>
+              </div>
+            </div>
+          `;
+        });
+        html += '</div>';
+        return html;
+      }
+
+      // Escape HTML to avoid injection when rendering textarea contents
+      function escapeHtml(str) {
+        if (!str && str !== '') return '';
+        return String(str)
+          .replaceAll('&','&amp;')
+          .replaceAll('<','&lt;')
+          .replaceAll('>','&gt;')
+          .replaceAll('"','&quot;')
+          .replaceAll("'",'&#039;');
+      }
+
+      // Submit flow (open modal with summary)
+      function submitFlow() {
+        // Validate required fields: date, time (hour/min), type
+        const invalid = [];
+        entries.forEach((e, idx) => {
+          if (!e.date || !e.hour || !e.minute || !e.type) invalid.push(idx+1);
+        });
+        if (invalid.length > 0) {
+          alert('Please complete required fields (Date, Time, Type) for entries: ' + invalid.join(', '));
+          return;
+        }
+        // Build summary and show modal
+        qs('#summaryContent').innerHTML = buildSummary();
+        const modal = new bootstrap.Modal(qs('#submitModal'));
+        modal.show();
+      }
+
+      // Confirm submission — here we simulate a send and then reset
+      function confirmSubmission() {
+        // Simulate sending data (you can hook this to fetch)
+        const payload = {
+          client: mainClient.value,
+          entries,
+          submittedAt: new Date().toISOString()
+        };
+        // For demonstration store to submittedData in localStorage under another key
+        const submittedKey = STORAGE_KEY + '.submitted';
+        try {
+          const existing = JSON.parse(localStorage.getItem(submittedKey) || '[]');
+          existing.push(payload);
+          localStorage.setItem(submittedKey, JSON.stringify(existing));
+        } catch (e) {
+          console.warn('Could not store submission', e);
+        }
+
+        // show success modal
+        qs('#submittedClient').textContent = mainClient.value;
+        bootstrap.Modal.getInstance(qs('#submitModal')).hide();
+        bootstrap.Modal.getOrCreateInstance(qs('#successModal')).show();
+
+        // Reset form for next client
+        entries = [];
+        save();
+        render();
+      }
+
+      // Export as JSON download
+      function exportJSON() {
+        const data = {
+          client: mainClient.value,
+          entries,
+          exportedAt: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${mainClient.value.replace(/\s+/g,'_')}_worksheet_${(new Date()).toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      // Import from storage (if available on load)
+      function init() {
+        // Set initial date
+        qs('#todayDate').textContent = today();
+
+        // Load saved state
+        const hadSaved = load();
+        if (!hadSaved) {
+          // start with one entry
+          entries = [ createEntryObject() ];
+        }
+
+        // Render UI
+        render();
+      }
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === 'n') {
+          e.preventDefault();
+          addEntry();
+        }
+        if (e.ctrlKey && (e.key === 'Enter' || e.keyCode === 13)) {
+          e.preventDefault();
+          submitFlow();
+        }
+      });
+
+      // Wire up UI buttons
+      qs('#addEntry').addEventListener('click', addEntry);
+      qs('#addEntrySidebar').addEventListener('click', addEntry);
+      qs('#floatingAdd').addEventListener('click', addEntry);
+      qs('#clearAll').addEventListener('click', clearAll);
+      qs('#exportJSON').addEventListener('click', exportJSON);
+      qs('#exportJSONBottom').addEventListener('click', exportJSON);
+      qs('#printBtn').addEventListener('click', () => window.print());
+      qs('#printBtnBottom').addEventListener('click', () => window.print());
+      qs('#submitBtn').addEventListener('click', submitFlow);
+      qs('#confirmSubmit').addEventListener('click', confirmSubmission);
+
+      // Client select change
+      mainClient.addEventListener('change', () => {
+        currentClient.textContent = mainClient.value;
+        clientDisplay.textContent = mainClient.value;
+        save();
+      });
+
+      // Theme toggle
+      const themeToggle = qs('#themeToggle');
+      themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        const icon = themeToggle.querySelector('i');
+        if (document.body.classList.contains('dark')) {
+          icon.className = 'fa fa-sun';
+        } else {
+          icon.className = 'fa fa-moon';
+        }
+        // persist choice (simple boolean)
+        localStorage.setItem('dailyWorksheet.themeDark', document.body.classList.contains('dark') ? '1' : '0');
+      });
+
+      // Restore theme
+      if (localStorage.getItem('dailyWorksheet.themeDark') === '1') {
+        document.body.classList.add('dark');
+        themeToggle.querySelector('i').className = 'fa fa-sun';
+      }
+
+      // Autosave throttled (already saving on change), but keep a periodic ensure
+      setInterval(save, 5000);
+
+      // Helper: escapeHtml available here as well
+      window.escapeHtml = escapeHtml;
+
+      // initialize
+      init();
+
+    })();
+  </script>
+</body>
+</html>

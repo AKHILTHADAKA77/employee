@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Worksheet</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+            --secondary-gradient: linear-gradient(135deg, #3498db 0%, #2c80b9 100%);
+            --success-gradient: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+            --danger-gradient: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            --warning-gradient: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+            --info-gradient: linear-gradient(135deg, #17a2b8 0%, #148ea1 100%);
+            --light-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --dark-gradient: linear-gradient(135deg, #343a40 0%, #23272b 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .worksheet-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .worksheet-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 0;
+        }
+        
+        .worksheet-container > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .worksheet-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            padding-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        
+        .worksheet-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: var(--secondary-gradient);
+            border-radius: 5px;
+        }
+        
+        .company-container {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: var(--shadow-md);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .company-container:hover {
+            transform: translateY(-3px);
+        }
+        
+        .company-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--secondary-gradient);
+        }
+        
+        .company-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shine 3s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .table-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--light-gradient);
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            box-shadow: var(--shadow-sm);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .table-title {
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.4rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .worksheet-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-md);
+            background: white;
+            position: relative;
+        }
+        
+        .worksheet-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 1200px;
+        }
+        
+        .worksheet-table thead th {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 15px;
+            border-bottom: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .worksheet-table thead th:first-child {
+            border-top-left-radius: 15px;
+        }
+        
+        .worksheet-table thead th:last-child {
+            border-top-right-radius: 15px;
+        }
+        
+        .worksheet-table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .worksheet-table tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        .worksheet-table tbody tr:hover {
+            background: linear-gradient(90deg, rgba(52, 152, 219, 0.05) 0%, rgba(52, 152, 219, 0.02) 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .worksheet-table tbody td {
+            padding: 18px 15px;
+            vertical-align: middle;
+            background-color: transparent;
+            border: none;
+            position: relative;
+        }
+        
+        .worksheet-table tbody td:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            right: 0;
+            height: 70%;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #e0e0e0, transparent);
+        }
+        
+        .platform-name {
+            font-weight: 700;
+            color: #2c3e50;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .platform-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+        }
+        
+        .facebook-icon { background: linear-gradient(135deg, #1877f2, #0d5cb6); }
+        .instagram-icon { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .youtube-icon { background: linear-gradient(135deg, #ff0000, #cc0000); }
+        .linkedin-icon { background: linear-gradient(135deg, #0a66c2, #004182); }
+        .twitter-icon { background: linear-gradient(135deg, #1da1f2, #0d8bd9); }
+        .tiktok-icon { background: linear-gradient(135deg, #000000, #333333); }
+        .pinterest-icon { background: linear-gradient(135deg, #e60023, #b3001b); }
+        .snapchat-icon { background: linear-gradient(135deg, #fffc00, #e6e200); color: #000; }
+        .whatsapp-icon { background: linear-gradient(135deg, #25d366, #1da851); }
+        .telegram-icon { background: linear-gradient(135deg, #0088cc, #006699); }
+        .reddit-icon { background: linear-gradient(135deg, #ff4500, #cc3700); }
+        .quora-icon { background: linear-gradient(135deg, #b92b27, #951f1c); }
+        .default-icon { background: linear-gradient(135deg, #6c757d, #545b62); }
+        
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            font-size: 14px;
+            color: #333;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        select:focus, input[type="text"]:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(135deg, #3498db, #2c80b9) border-box;
+            border: 2px solid transparent;
+        }
+        
+        .form-select, .form-control {
+            border-radius: 10px !important;
+            border: 2px solid #e0e0e0 !important;
+            padding: 12px 15px !important;
+            transition: all 0.3s !important;
+        }
+        
+        .form-select:focus, .form-control:focus {
+            border-color: #3498db !important;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2) !important;
+        }
+        
+        .add-platform-btn {
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-md);
+            white-space: nowrap;
+        }
+        
+        .add-platform-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, #229954, #1e8449);
+        }
+        
+        .remove-platform-btn {
+            background: var(--danger-gradient);
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .remove-platform-btn:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .extra-section {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--light-gradient);
+            border-radius: 15px;
+            border-left: 5px solid #f39c12;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .extra-section label {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 15px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            font-size: 14px;
+            min-height: 140px;
+            resize: vertical;
+            color: #333;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(135deg, #3498db, #2c80b9) border-box;
+            border: 2px solid transparent;
+        }
+        
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .submit-btn {
+            background: var(--secondary-gradient);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-md);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        .quick-add-section {
+            background: var(--light-gradient);
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            display: none;
+            border-left: 5px solid #27ae60;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .quick-add-section.active {
+            display: block;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .quick-add-title {
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Success Modal Styling */
+        .success-modal .modal-content {
+            border-radius: 20px;
+            overflow: hidden;
+            border: none;
+            box-shadow: var(--shadow-lg);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .success-modal .modal-header {
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            padding: 30px;
+        }
+        
+        .success-modal .modal-body {
+            padding: 30px;
+        }
+        
+        .success-modal .task-summary {
+            background: var(--light-gradient);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .success-modal .task-item {
+            padding: 15px 20px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .success-modal .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .success-modal .task-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .success-modal .platform-badge {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4090 100%);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1400px) {
+            .worksheet-container {
+                padding: 25px;
+            }
+            
+            .worksheet-title {
+                font-size: 2.2rem;
+            }
+            
+            .company-container {
+                font-size: 1.6rem;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .worksheet-title {
+                font-size: 2rem;
+            }
+            
+            .company-container {
+                font-size: 1.4rem;
+            }
+            
+            .worksheet-table {
+                min-width: 1100px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                padding: 15px;
+            }
+            
+            .worksheet-container {
+                padding: 20px;
+            }
+            
+            .worksheet-title {
+                font-size: 1.8rem;
+                padding-bottom: 15px;
+            }
+            
+            .company-container {
+                font-size: 1.3rem;
+                padding: 18px;
+            }
+            
+            .table-header-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .add-platform-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            
+            .worksheet-container {
+                padding: 15px;
+                border-radius: 15px;
+            }
+            
+            .worksheet-title {
+                font-size: 1.6rem;
+                margin-bottom: 20px;
+            }
+            
+            .company-container {
+                font-size: 1.2rem;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            .worksheet-table thead th {
+                padding: 15px 10px;
+                font-size: 14px;
+            }
+            
+            .worksheet-table tbody td {
+                padding: 12px 10px;
+            }
+            
+            .platform-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+            
+            .extra-section {
+                padding: 20px;
+                margin-top: 30px;
+            }
+            
+            .submit-btn {
+                width: 100%;
+                padding: 16px;
+                justify-content: center;
+            }
+            
+            .quick-add-section {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .worksheet-title {
+                font-size: 1.4rem;
+            }
+            
+            .company-container {
+                font-size: 1.1rem;
+                padding: 12px;
+            }
+            
+            .table-header-section {
+                padding: 15px;
+            }
+            
+            .table-title {
+                font-size: 1.2rem;
+            }
+            
+            select, input[type="text"], textarea {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+            
+            .platform-name {
+                min-width: 150px;
+                gap: 8px;
+            }
+            
+            .platform-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+            
+            .remove-platform-btn {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .quick-add-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .quick-platform-select, .quick-add-btn, .quick-cancel-btn {
+                width: 100%;
+            }
+            
+            .success-modal .modal-dialog {
+                margin: 10px;
+            }
+            
+            .success-modal .modal-body {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            body {
+                padding: 5px;
+            }
+            
+            .worksheet-container {
+                padding: 12px;
+            }
+            
+            .worksheet-title {
+                font-size: 1.3rem;
+            }
+            
+            .company-container {
+                font-size: 1rem;
+            }
+            
+            .worksheet-table thead th {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+            
+            .worksheet-table tbody td {
+                padding: 10px 8px;
+            }
+        }
+        
+        /* Custom modal for adding platforms */
+        .custom-platform-modal .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: var(--shadow-lg);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .custom-platform-modal .modal-header {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 25px;
+        }
+        
+        .custom-platform-modal .modal-body {
+            padding: 25px;
+        }
+        
+        /* Animation for adding new rows */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .new-platform-row {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Stats badge */
+        .stats-badge {
+            display: inline-block;
+            background: var(--secondary-gradient);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 350px;
+        }
+        
+        .custom-toast {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        /* Tooltips */
+        [data-bs-toggle="tooltip"] {
+            cursor: help;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            
+            .worksheet-container {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                padding: 20px !important;
+                margin: 0 !important;
+            }
+            
+            .add-platform-btn, .remove-platform-btn, .quick-add-section,
+            .success-modal, .custom-platform-modal {
+                display: none !important;
+            }
+            
+            .worksheet-table-wrapper {
+                overflow: visible !important;
+            }
+            
+            .worksheet-table {
+                min-width: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <div class="worksheet-container">
+        <div class="worksheet-title">
+            <i class="fas fa-tasks me-2"></i>Daily Worksheet
+        </div>
+        
+        <!-- Client Selection -->
+        <div class="row mb-4 g-3">
+            <div class="col-lg-6">
+                <div class="client-selection">
+                    <label class="form-label fw-bold mb-2">
+                        <i class="fas fa-users me-2"></i>Select Client:
+                    </label>
+                    <select class="form-select form-select-lg" id="clientSelect">
+                        <option value="client1">Client 1</option>
+                        <option value="client2">Client 2</option>
+                        <option value="client3" selected>Client 3</option>
+                        <option value="client4">Client 4</option>
+                        <option value="client5">Client 5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex align-items-end">
+                <div class="alert alert-info w-100 mb-0 border-0" style="background: var(--info-gradient); color: white;">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Today's Date:</strong> <span id="currentDate"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Company Name Container -->
+        <div class="company-container" id="companyContainer">
+            <i class="fas fa-building me-3"></i>CLIENT 3 PVT LTD
+        </div>
+        
+        <!-- Table Header with Add Button -->
+        <div class="table-header-section">
+            <div>
+                <div class="table-title">
+                    <i class="fas fa-list-check me-2"></i>Platform Tasks
+                </div>
+                <small class="text-muted d-block mt-1">Manage all your social media tasks for today</small>
+            </div>
+            <button class="add-platform-btn" id="addPlatformBtn">
+                <i class="fas fa-plus-circle"></i> Add New Platform
+            </button>
+        </div>
+        
+        <!-- Quick Add Section (Hidden by default) -->
+        <div class="quick-add-section" id="quickAddSection">
+            <div class="quick-add-title">
+                <i class="fas fa-rocket me-2"></i>Quick Add Platform:
+            </div>
+            <div class="quick-add-controls">
+                <select class="form-select quick-platform-select" id="quickPlatformSelect">
+                    <option value="">-- Select Platform --</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="pinterest">Pinterest</option>
+                    <option value="snapchat">Snapchat</option>
+                    <option value="whatsapp">WhatsApp Business</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="reddit">Reddit</option>
+                    <option value="quora">Quora</option>
+                    <option value="custom">Custom Platform</option>
+                </select>
+                <button class="btn btn-primary quick-add-btn" id="quickAddBtn">
+                    <i class="fas fa-plus me-1"></i> Add to Table
+                </button>
+                <button class="btn btn-secondary quick-cancel-btn" id="quickCancelBtn">
+                    <i class="fas fa-times me-1"></i> Cancel
+                </button>
+            </div>
+        </div>
+        
+        <!-- Worksheet Table -->
+        <div class="worksheet-table-wrapper">
+            <table class="worksheet-table" id="platformsTable">
+                <thead>
+                    <tr>
+                        <th style="min-width: 180px;">PLATFORM</th>
+                        <th style="min-width: 200px;">TASK TYPE</th>
+                        <th style="min-width: 180px;">WORK DONE</th>
+                        <th style="min-width: 180px;">POSTER/VIDEO CREATED</th>
+                        <th style="min-width: 180px;">POST SCHEDULED/POSTED</th>
+                        <th style="min-width: 180px;">CONTENT RECEIVED</th>
+                        <th style="min-width: 200px;">REMARKS</th>
+                        <th style="min-width: 80px;">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="platformRows">
+                    <!-- Facebook Row -->
+                    <tr id="row-facebook-1" class="new-platform-row">
+                        <td class="platform-name">
+                            <span class="platform-icon facebook-icon">
+                                <i class="fab fa-facebook-f"></i>
+                            </span>
+                            <span>Facebook</span>
+                        </td>
+                        <td>
+                            <select class="form-select task-type" id="taskTypeFacebook1">
+                                <option value="">Select Task Type</option>
+                                <option value="page_posting">Page Posting</option>
+                                <option value="page_maintenance">Page Maintenance</option>
+                                <option value="ad_management">Ad Management</option>
+                                <option value="analytics">Analytics & Reporting</option>
+                                <option value="community">Community Management</option>
+                                <option value="content_creation">Content Creation</option>
+                                <option value="content_scheduling">Content Scheduling</option>
+                                <option value="story_creation">Story Creation</option>
+                                <option value="live_streaming">Live Streaming</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select work-done" id="workDoneFacebook1">
+                                <option value="">Select Work</option>
+                                <option value="posted_content">Posted Content</option>
+                                <option value="scheduled_posts">Scheduled Posts</option>
+                                <option value="created_content">Created Content</option>
+                                <option value="edited_content">Edited Content</option>
+                                <option value="created_ads">Created Ads</option>
+                                <option value="responded_comments">Responded to Comments</option>
+                                <option value="ran_ads">Ran Ad Campaign</option>
+                                <option value="analyzed_data">Analyzed Page Data</option>
+                                <option value="updated_profile">Updated Profile Info</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select poster-video-created" id="posterVideoFacebook1">
+                                <option value="">Select</option>
+                                <option value="poster_yes">Poster - Yes</option>
+                                <option value="poster_no">Poster - No</option>
+                                <option value="video_yes">Video - Yes</option>
+                                <option value="video_no">Video - No</option>
+                                <option value="both_yes">Both - Yes</option>
+                                <option value="both_no">Both - No</option>
+                                <option value="na">N/A</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="postScheduledFacebook1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="contentReceivedFacebook1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="remarksFacebook1" placeholder="Enter remarks...">
+                        </td>
+                        <td>
+                            <button class="remove-platform-btn" onclick="removePlatform('facebook-1')" title="Remove Platform">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Instagram Row -->
+                    <tr id="row-instagram-1" class="new-platform-row">
+                        <td class="platform-name">
+                            <span class="platform-icon instagram-icon">
+                                <i class="fab fa-instagram"></i>
+                            </span>
+                            <span>Instagram</span>
+                        </td>
+                        <td>
+                            <select class="form-select task-type" id="taskTypeInstagram1">
+                                <option value="">Select Task Type</option>
+                                <option value="feed_posting">Feed Posting</option>
+                                <option value="stories_creation">Stories Creation</option>
+                                <option value="reels_creation">Reels Creation</option>
+                                <option value="analytics">Analytics & Reporting</option>
+                                <option value="engagement">Engagement Management</option>
+                                <option value="content_creation">Content Creation</option>
+                                <option value="igtv">IGTV Management</option>
+                                <option value="live">Live Streaming</option>
+                                <option value="shopping">Shopping Posts</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select work-done" id="workDoneInstagram1">
+                                <option value="">Select Work</option>
+                                <option value="posted_content">Posted Content</option>
+                                <option value="posted_stories">Posted Stories</option>
+                                <option value="created_reels">Created Reels</option>
+                                <option value="edited_content">Edited Content</option>
+                                <option value="uploaded_igtv">Uploaded IGTV</option>
+                                <option value="responded_comments">Responded to Comments</option>
+                                <option value="ran_ads">Ran Instagram Ads</option>
+                                <option value="analyzed_insights">Analyzed Insights</option>
+                                <option value="shopping_posts">Created Shopping Posts</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select poster-video-created" id="posterVideoInstagram1">
+                                <option value="">Select</option>
+                                <option value="poster_yes">Poster - Yes</option>
+                                <option value="poster_no">Poster - No</option>
+                                <option value="video_yes">Video - Yes</option>
+                                <option value="video_no">Video - No</option>
+                                <option value="both_yes">Both - Yes</option>
+                                <option value="both_no">Both - No</option>
+                                <option value="na">N/A</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="postScheduledInstagram1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="contentReceivedInstagram1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="remarksInstagram1" placeholder="Enter remarks...">
+                        </td>
+                        <td>
+                            <button class="remove-platform-btn" onclick="removePlatform('instagram-1')" title="Remove Platform">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <!-- YouTube Row -->
+                    <tr id="row-youtube-1" class="new-platform-row">
+                        <td class="platform-name">
+                            <span class="platform-icon youtube-icon">
+                                <i class="fab fa-youtube"></i>
+                            </span>
+                            <span>YouTube</span>
+                        </td>
+                        <td>
+                            <select class="form-select task-type" id="taskTypeYouTube1">
+                                <option value="">Select Task Type</option>
+                                <option value="video_upload">Video Upload</option>
+                                <option value="video_editing">Video Editing</option>
+                                <option value="seo_optimization">SEO Optimization</option>
+                                <option value="channel_analytics">Channel Analytics</option>
+                                <option value="thumbnail_creation">Thumbnail Creation</option>
+                                <option value="description_writing">Description Writing</option>
+                                <option value="comments_management">Comments Management</option>
+                                <option value="playlist_management">Playlist Management</option>
+                                <option value="live_streaming">Live Streaming</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select work-done" id="workDoneYouTube1">
+                                <option value="">Select Work</option>
+                                <option value="uploaded_video">Uploaded Video</option>
+                                <option value="edited_video">Edited Video</option>
+                                <option value="seo_optimized">SEO Optimized</option>
+                                <option value="created_thumbnail">Created Thumbnail</option>
+                                <option value="updated_description">Updated Description</option>
+                                <option value="responded_comments">Responded to Comments</option>
+                                <option value="created_playlist">Created Playlist</option>
+                                <option value="live_streamed">Live Streamed</option>
+                                <option value="channel_optimized">Optimized Channel</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select poster-video-created" id="posterVideoYouTube1">
+                                <option value="">Select</option>
+                                <option value="poster_yes">Poster - Yes</option>
+                                <option value="poster_no">Poster - No</option>
+                                <option value="video_yes">Video - Yes</option>
+                                <option value="video_no">Video - No</option>
+                                <option value="both_yes">Both - Yes</option>
+                                <option value="both_no">Both - No</option>
+                                <option value="na">N/A</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="postScheduledYouTube1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="contentReceivedYouTube1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="remarksYouTube1" placeholder="Enter remarks...">
+                        </td>
+                        <td>
+                            <button class="remove-platform-btn" onclick="removePlatform('youtube-1')" title="Remove Platform">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <!-- LinkedIn Row -->
+                    <tr id="row-linkedin-1" class="new-platform-row">
+                        <td class="platform-name">
+                            <span class="platform-icon linkedin-icon">
+                                <i class="fab fa-linkedin-in"></i>
+                            </span>
+                            <span>LinkedIn</span>
+                        </td>
+                        <td>
+                            <select class="form-select task-type" id="taskTypeLinkedIn1">
+                                <option value="">Select Task Type</option>
+                                <option value="company_posting">Company Posting</option>
+                                <option value="article_writing">Article Writing</option>
+                                <option value="engagement_management">Engagement Management</option>
+                                <option value="analytics">Analytics & Reporting</option>
+                                <option value="recruitment_posting">Recruitment Posting</option>
+                                <option value="content_creation">Content Creation</option>
+                                <option value="networking">Networking</option>
+                                <option value="profile_optimization">Profile Optimization</option>
+                                <option value="job_search">Job Search Posts</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select work-done" id="workDoneLinkedIn1">
+                                <option value="">Select Work</option>
+                                <option value="posted_content">Posted Content</option>
+                                <option value="posted_articles">Posted Articles</option>
+                                <option value="scheduled_posts">Scheduled Posts</option>
+                                <option value="edited_content">Edited Content</option>
+                                <option value="engaged_network">Engaged with Network</option>
+                                <option value="posted_job">Posted Job</option>
+                                <option value="optimized_profile">Optimized Profile</option>
+                                <option value="connected_professionals">Connected with Professionals</option>
+                                <option value="analyzed_metrics">Analyzed Metrics</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select poster-video-created" id="posterVideoLinkedIn1">
+                                <option value="">Select</option>
+                                <option value="poster_yes">Poster - Yes</option>
+                                <option value="poster_no">Poster - No</option>
+                                <option value="video_yes">Video - Yes</option>
+                                <option value="video_no">Video - No</option>
+                                <option value="both_yes">Both - Yes</option>
+                                <option value="both_no">Both - No</option>
+                                <option value="na">N/A</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="postScheduledLinkedIn1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="contentReceivedLinkedIn1" placeholder="Enter status...">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="remarksLinkedIn1" placeholder="Enter remarks...">
+                        </td>
+                        <td>
+                            <button class="remove-platform-btn" onclick="removePlatform('linkedin-1')" title="Remove Platform">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Extra Text Area -->
+        <div class="extra-section">
+            <label>
+                <i class="fas fa-sticky-note me-2"></i>Additional Notes:
+            </label>
+            <textarea class="form-control" id="extraNotes" placeholder="Add any additional notes, comments, or special instructions here..."></textarea>
+            <div class="mt-2 text-end">
+                <small class="text-muted" id="charCount">0/1000 characters</small>
+            </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="submit-section">
+            <button class="submit-btn" id="submitBtn">
+                <i class="fas fa-paper-plane me-2"></i> Submit Task
+            </button>
+            <p class="text-muted mt-3">
+                <i class="fas fa-lightbulb me-1"></i> 
+                All submitted tasks will be reviewed and processed. You can edit before submission.
+            </p>
+        </div>
+    </div>
+
+    <!-- Custom Platform Modal -->
+    <div class="modal fade custom-platform-modal" id="platformModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus-circle me-2"></i>Add Custom Platform
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="customPlatformName" class="form-label fw-bold">Custom Platform Name:</label>
+                        <input type="text" class="form-control form-control-lg" id="customPlatformName" placeholder="Enter custom platform name">
+                        <div class="form-text">Enter a name for your custom platform (e.g., "Company Blog", "Podcast", etc.)</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="confirmPlatformBtn">
+                        <i class="fas fa-check me-1"></i> Add Platform
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade success-modal" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>Task Submitted Successfully!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <div class="display-1 text-success mb-3">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h4 class="mb-3" id="successClientName">Task submitted for CLIENT 3 PVT LTD</h4>
+                        <p class="lead">Your daily worksheet has been successfully submitted.</p>
+                    </div>
+                    
+                    <div class="task-summary">
+                        <h6 class="fw-bold mb-3">
+                            <i class="fas fa-list-check me-2"></i>Task Summary
+                            <span class="stats-badge" id="taskCountBadge">4 tasks</span>
+                        </h6>
+                        <div id="taskSummaryContent">
+                            <!-- Task summary will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success mt-4 border-0" style="background: var(--success-gradient); color: white;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> You can view and edit your submission in the activity log.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Client data mapping
+        const clientData = {
+            'client1': { company: 'Client 1 Company', display: 'CLIENT 1 COMPANY' },
+            'client2': { company: 'Client 2 Ltd', display: 'CLIENT 2 LTD' },
+            'client3': { company: 'Client 3 Pvt Ltd', display: 'CLIENT 3 PVT LTD' },
+            'client4': { company: 'Client 4 Inc', display: 'CLIENT 4 INC' },
+            'client5': { company: 'Client 5 Solutions', display: 'CLIENT 5 SOLUTIONS' }
+        };
+        
+        // Platform configuration
+        const platformConfig = {
+            'facebook': { name: 'Facebook', icon: 'facebook-icon', code: 'F', iconClass: 'fab fa-facebook-f' },
+            'instagram': { name: 'Instagram', icon: 'instagram-icon', code: 'IG', iconClass: 'fab fa-instagram' },
+            'youtube': { name: 'YouTube', icon: 'youtube-icon', code: 'YT', iconClass: 'fab fa-youtube' },
+            'linkedin': { name: 'LinkedIn', icon: 'linkedin-icon', code: 'IN', iconClass: 'fab fa-linkedin-in' },
+            'twitter': { name: 'Twitter', icon: 'twitter-icon', code: 'TW', iconClass: 'fab fa-twitter' },
+            'tiktok': { name: 'TikTok', icon: 'tiktok-icon', code: 'TT', iconClass: 'fab fa-tiktok' },
+            'pinterest': { name: 'Pinterest', icon: 'pinterest-icon', code: 'PI', iconClass: 'fab fa-pinterest' },
+            'snapchat': { name: 'Snapchat', icon: 'snapchat-icon', code: 'SC', iconClass: 'fab fa-snapchat' },
+            'whatsapp': { name: 'WhatsApp Business', icon: 'whatsapp-icon', code: 'WA', iconClass: 'fab fa-whatsapp' },
+            'telegram': { name: 'Telegram', icon: 'telegram-icon', code: 'TG', iconClass: 'fab fa-telegram' },
+            'reddit': { name: 'Reddit', icon: 'reddit-icon', code: 'RD', iconClass: 'fab fa-reddit' },
+            'quora': { name: 'Quora', icon: 'quora-icon', code: 'QR', iconClass: 'fab fa-quora' }
+        };
+        
+        // Counter for duplicate platforms
+        let platformCounter = {
+            'facebook': 1,
+            'instagram': 1,
+            'youtube': 1,
+            'linkedin': 1,
+            'twitter': 0,
+            'tiktok': 0,
+            'pinterest': 0,
+            'snapchat': 0,
+            'whatsapp': 0,
+            'telegram': 0,
+            'reddit': 0,
+            'quora': 0
+        };
+        
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            const clientSelect = document.getElementById('clientSelect');
+            const companyContainer = document.getElementById('companyContainer');
+            const addPlatformBtn = document.getElementById('addPlatformBtn');
+            const quickAddSection = document.getElementById('quickAddSection');
+            const quickPlatformSelect = document.getElementById('quickPlatformSelect');
+            const quickAddBtn = document.getElementById('quickAddBtn');
+            const quickCancelBtn = document.getElementById('quickCancelBtn');
+            const platformModal = new bootstrap.Modal(document.getElementById('platformModal'));
+            const confirmPlatformBtn = document.getElementById('confirmPlatformBtn');
+            const customPlatformName = document.getElementById('customPlatformName');
+            const submitBtn = document.getElementById('submitBtn');
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            const currentDateElement = document.getElementById('currentDate');
+            const extraNotes = document.getElementById('extraNotes');
+            const charCount = document.getElementById('charCount');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            // Set current date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateElement.textContent = now.toLocaleDateString('en-US', options);
+            
+            // Set Client 3 as default
+            clientSelect.value = 'client3';
+            updateCompanyDisplay('client3');
+            
+            // Character counter for extra notes
+            extraNotes.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = `${length}/1000 characters`;
+                if (length > 1000) {
+                    charCount.classList.add('text-danger');
+                } else {
+                    charCount.classList.remove('text-danger');
+                }
+            });
+            
+            // Update company display when client changes
+            clientSelect.addEventListener('change', function() {
+                const selectedClient = this.value;
+                updateCompanyDisplay(selectedClient);
+            });
+            
+            // Update company display function
+            function updateCompanyDisplay(clientId) {
+                const clientInfo = clientData[clientId];
+                if (clientInfo) {
+                    companyContainer.innerHTML = `<i class="fas fa-building me-3"></i>${clientInfo.display}`;
+                }
+            }
+            
+            // Add Platform Button Click - Show quick add section
+            addPlatformBtn.addEventListener('click', function() {
+                quickAddSection.classList.add('active');
+                quickPlatformSelect.focus();
+            });
+            
+            // Quick Add Button Click
+            quickAddBtn.addEventListener('click', function() {
+                const platformType = quickPlatformSelect.value;
+                
+                if (!platformType) {
+                    showToast('Please select a platform to add.', 'warning');
+                    return;
+                }
+                
+                if (platformType === 'custom') {
+                    // Show custom platform modal
+                    quickAddSection.classList.remove('active');
+                    customPlatformName.value = '';
+                    platformModal.show();
+                    quickPlatformSelect.value = '';
+                    return;
+                }
+                
+                addPlatform(platformType);
+                
+                // Reset and hide quick add section
+                quickPlatformSelect.value = '';
+                quickAddSection.classList.remove('active');
+                
+                // Show success toast
+                showToast(`${platformConfig[platformType].name} added successfully!`, 'success');
+            });
+            
+            // Quick Cancel Button Click
+            quickCancelBtn.addEventListener('click', function() {
+                quickPlatformSelect.value = '';
+                quickAddSection.classList.remove('active');
+            });
+            
+            // Confirm Platform Addition (in modal)
+            confirmPlatformBtn.addEventListener('click', function() {
+                const customName = customPlatformName.value.trim();
+                
+                if (!customName) {
+                    showToast('Please enter a custom platform name.', 'warning');
+                    return;
+                }
+                
+                // Create custom platform
+                const platformId = customName.toLowerCase().replace(/\s+/g, '_');
+                const platformName = customName;
+                const platformIcon = 'default-icon';
+                const platformCode = customName.substring(0, 2).toUpperCase();
+                const iconClass = 'fas fa-globe';
+                
+                // Initialize counter for custom platform
+                if (!platformCounter[platformId]) {
+                    platformCounter[platformId] = 0;
+                }
+                platformCounter[platformId]++;
+                
+                const uniqueId = `${platformId}-${platformCounter[platformId]}`;
+                
+                // Add the new platform row
+                addPlatformRow(uniqueId, platformName, platformIcon, platformCode, iconClass);
+                
+                // Close modal and reset
+                platformModal.hide();
+                customPlatformName.value = '';
+                quickPlatformSelect.value = '';
+                
+                // Show success toast
+                showToast(`Custom platform "${customName}" added successfully!`, 'success');
+            });
+            
+            // Function to add a platform
+            function addPlatform(platformType) {
+                const platformInfo = platformConfig[platformType];
+                if (platformInfo) {
+                    // Increment counter for this platform type
+                    platformCounter[platformType]++;
+                    const uniqueId = `${platformType}-${platformCounter[platformType]}`;
+                    
+                    addPlatformRow(uniqueId, platformInfo.name, platformInfo.icon, platformInfo.code, platformInfo.iconClass);
+                }
+            }
+            
+            // Form submission with loading animation
+            submitBtn.addEventListener('click', function() {
+                // Show loading overlay
+                loadingOverlay.classList.add('active');
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    const selectedClient = clientSelect.options[clientSelect.selectedIndex].text;
+                    const companyName = clientData[clientSelect.value].company;
+                    const companyDisplay = clientData[clientSelect.value].display;
+                    
+                    // Collect form data
+                    const formData = {
+                        client: selectedClient,
+                        company: companyName,
+                        date: now.toISOString().split('T')[0],
+                        tasks: []
+                    };
+                    
+                    // Collect each platform's data
+                    const rows = document.querySelectorAll('#platformRows tr');
+                    let completedTasks = 0;
+                    let totalTasks = rows.length;
+                    
+                    rows.forEach(row => {
+                        const platformName = row.querySelector('.platform-name').textContent.trim();
+                        const taskType = row.querySelector('.task-type').value;
+                        const workDone = row.querySelector('.work-done').value;
+                        const posterVideoCreated = row.querySelector('.poster-video-created').value;
+                        const postScheduled = row.querySelector('input[id^="postScheduled"]').value;
+                        const contentReceived = row.querySelector('input[id^="contentReceived"]').value;
+                        const remarks = row.querySelector('input[id^="remarks"]').value;
+                        
+                        // Check if task is completed
+                        if (taskType && workDone) completedTasks++;
+                        
+                        formData.tasks.push({
+                            platform: platformName,
+                            taskType,
+                            workDone,
+                            posterVideoCreated,
+                            postScheduled,
+                            contentReceived,
+                            remarks,
+                            completed: taskType && workDone
+                        });
+                    });
+                    
+                    // Get extra text
+                    const extraText = document.getElementById('extraNotes').value;
+                    formData.extraNotes = extraText;
+                    
+                    // Calculate completion percentage
+                    const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                    
+                    // Update success modal content
+                    document.getElementById('successClientName').textContent = `Task submitted for ${companyDisplay}`;
+                    document.getElementById('taskCountBadge').textContent = `${totalTasks} tasks (${completionPercentage}% completed)`;
+                    
+                    // Populate task summary
+                    const taskSummaryContent = document.getElementById('taskSummaryContent');
+                    taskSummaryContent.innerHTML = '';
+                    
+                    formData.tasks.forEach((task, index) => {
+                        const taskItem = document.createElement('div');
+                        taskItem.className = 'task-item';
+                        
+                        const platformText = document.createElement('div');
+                        platformText.innerHTML = `<strong>${task.platform}</strong><br>
+                                               <small class="text-muted">${task.taskType || 'No task type selected'}</small>`;
+                        
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = `badge ${task.completed ? 'bg-success' : 'bg-warning'}`;
+                        statusBadge.textContent = task.completed ? 'Completed' : 'Incomplete';
+                        
+                        taskItem.appendChild(platformText);
+                        taskItem.appendChild(statusBadge);
+                        taskSummaryContent.appendChild(taskItem);
+                    });
+                    
+                    // Add extra notes if available
+                    if (extraText) {
+                        const notesItem = document.createElement('div');
+                        notesItem.className = 'task-item';
+                        notesItem.innerHTML = `
+                            <div>
+                                <strong><i class="fas fa-sticky-note me-1"></i> Additional Notes</strong><br>
+                                <small class="text-muted">${extraText.substring(0, 100)}${extraText.length > 100 ? '...' : ''}</small>
+                            </div>
+                        `;
+                        taskSummaryContent.appendChild(notesItem);
+                    }
+                    
+                    // Hide loading overlay
+                    loadingOverlay.classList.remove('active');
+                    
+                    // Show success modal
+                    successModal.show();
+                    
+                    // Log data to console (for debugging)
+                    console.log('Form data:', formData);
+                    
+                    // Show success toast
+                    showToast('Worksheet submitted successfully!', 'success');
+                }, 1500); // Simulated delay
+            });
+            
+            // Add some sample data for demonstration
+            setTimeout(() => {
+                // Pre-select some options for demonstration
+                document.getElementById('taskTypeFacebook1').value = 'page_posting';
+                document.getElementById('workDoneFacebook1').value = 'posted_content';
+                document.getElementById('posterVideoFacebook1').value = 'poster_yes';
+                document.getElementById('postScheduledFacebook1').value = 'Scheduled for tomorrow';
+                document.getElementById('contentReceivedFacebook1').value = 'Yes, from marketing team';
+                document.getElementById('remarksFacebook1').value = 'Posted weekly update';
+                
+                document.getElementById('taskTypeInstagram1').value = 'stories_creation';
+                document.getElementById('workDoneInstagram1').value = 'posted_stories';
+                document.getElementById('posterVideoInstagram1').value = 'video_yes';
+                document.getElementById('postScheduledInstagram1').value = 'Posted immediately';
+                document.getElementById('contentReceivedInstagram1').value = 'Partial content received';
+                document.getElementById('remarksInstagram1').value = 'Posted product story';
+            }, 100);
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+        
+        // Function to add a new platform row
+        function addPlatformRow(platformId, platformName, platformIcon, platformCode, iconClass = 'fas fa-globe') {
+            const tableBody = document.getElementById('platformRows');
+            
+            // Create new row
+            const newRow = document.createElement('tr');
+            newRow.id = `row-${platformId}`;
+            newRow.className = 'new-platform-row';
+            
+            // Extract base platform name for ID generation
+            const basePlatformId = platformId.split('-')[0];
+            const capitalizedId = basePlatformId.charAt(0).toUpperCase() + basePlatformId.slice(1);
+            const uniqueNum = platformId.split('-')[1] || '1';
+            
+            // Generate unique IDs for this row
+            const taskTypeId = `taskType${capitalizedId}${uniqueNum}`;
+            const workDoneId = `workDone${capitalizedId}${uniqueNum}`;
+            const posterVideoId = `posterVideo${capitalizedId}${uniqueNum}`;
+            const postScheduledId = `postScheduled${capitalizedId}${uniqueNum}`;
+            const contentReceivedId = `contentReceived${capitalizedId}${uniqueNum}`;
+            const remarksId = `remarks${capitalizedId}${uniqueNum}`;
+            
+            // Display name with number if more than one
+            const displayName = uniqueNum > 1 ? `${platformName} (${uniqueNum})` : platformName;
+            
+            // Set row content
+            newRow.innerHTML = `
+                <td class="platform-name">
+                    <span class="platform-icon ${platformIcon}">
+                        <i class="${iconClass}"></i>
+                    </span>
+                    <span>${displayName}</span>
+                </td>
+                <td>
+                    <select class="form-select task-type" id="${taskTypeId}">
+                        <option value="">Select Task Type</option>
+                        <option value="posting">Page/Profile Posting</option>
+                        <option value="content_creation">Content Creation</option>
+                        <option value="engagement">Engagement Management</option>
+                        <option value="analytics">Analytics & Reporting</option>
+                        <option value="scheduling">Content Scheduling</option>
+                        <option value="advertising">Advertising</option>
+                        <option value="community">Community Management</option>
+                        <option value="optimization">Profile Optimization</option>
+                        <option value="live">Live Streaming</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select work-done" id="${workDoneId}">
+                        <option value="">Select Work</option>
+                        <option value="posted_content">Posted Content</option>
+                        <option value="created_content">Created Content</option>
+                        <option value="scheduled_posts">Scheduled Posts</option>
+                        <option value="edited_content">Edited Content</option>
+                        <option value="responded_users">Responded to Users</option>
+                        <option value="analyzed_performance">Analyzed Performance</option>
+                        <option value="optimized_profile">Optimized Profile</option>
+                        <option value="ran_campaign">Ran Campaign</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select poster-video-created" id="${posterVideoId}">
+                        <option value="">Select</option>
+                        <option value="poster_yes">Poster - Yes</option>
+                        <option value="poster_no">Poster - No</option>
+                        <option value="video_yes">Video - Yes</option>
+                        <option value="video_no">Video - No</option>
+                        <option value="both_yes">Both - Yes</option>
+                        <option value="both_no">Both - No</option>
+                        <option value="na">N/A</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="${postScheduledId}" placeholder="Enter status...">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="${contentReceivedId}" placeholder="Enter status...">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="${remarksId}" placeholder="Enter remarks...">
+                </td>
+                <td>
+                    <button class="remove-platform-btn" onclick="removePlatform('${platformId}')" title="Remove Platform">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            
+            // Add row to table
+            tableBody.appendChild(newRow);
+            
+            // Scroll to new row smoothly
+            setTimeout(() => {
+                newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+        
+        // Function to remove a platform row
+        function removePlatform(platformId) {
+            const row = document.getElementById(`row-${platformId}`);
+            if (row) {
+                // Add fade out animation
+                row.style.opacity = '0.5';
+                row.style.transform = 'translateX(20px)';
+                
+                setTimeout(() => {
+                    row.remove();
+                    // Show notification
+                    showToast('Platform removed successfully!', 'info');
+                }, 300);
+            }
+        }
+        
+        // Function to show toast notifications
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `custom-toast mb-3`;
+            toast.innerHTML = `
+                <div class="d-flex align-items-center p-3">
+                    <div class="me-3">
+                        <i class="fas fa-${getIconForType(type)} fa-lg text-${type}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-bold">${message}</div>
+                    </div>
+                    <button type="button" class="btn-close" onclick="this.closest('.custom-toast').remove()"></button>
+                </div>
+            `;
+            
+            // Add to container
+            toastContainer.appendChild(toast);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
+        
+        // Helper function to get icon for toast type
+        function getIconForType(type) {
+            const icons = {
+                'success': 'check-circle',
+                'warning': 'exclamation-triangle',
+                'error': 'times-circle',
+                'info': 'info-circle',
+                'danger': 'times-circle'
+            };
+            return icons[type] || 'info-circle';
+        }
+        
+        // Helper function to show alerts (for backward compatibility)
+        function showAlert(message, type) {
+            showToast(message, type);
+        }
+    </script>
+</body>
+</html>

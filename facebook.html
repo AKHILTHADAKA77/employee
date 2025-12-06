@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Daily Report</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --facebook-blue: #1877f2;
+            --instagram-purple: #e4405f;
+            --youtube-red: #ff0000;
+            --linkedin-blue: #0a66c2;
+            --whatsapp-green: #25d366;
+            --twitter-blue: #1da1f2;
+            --tiktok-black: #000000;
+            --pinterest-red: #e60023;
+            
+            --primary-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --sidebar-bg: #2c3e50;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --border-color: #e0e0e0;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            
+            --gradient-facebook: linear-gradient(135deg, #1877f2, #0d5cb6);
+            --gradient-instagram: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            --gradient-youtube: linear-gradient(135deg, #ff0000, #cc0000);
+            --gradient-linkedin: linear-gradient(135deg, #0a66c2, #004182);
+            --gradient-whatsapp: linear-gradient(135deg, #25d366, #1da851);
+            
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: #3498db;
+        }
+        
+        .date-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Main Container */
+        .main-container {
+            padding: 2rem 0;
+        }
+        
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .summary-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-left: 5px solid;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .summary-card.facebook { border-color: var(--facebook-blue); }
+        .summary-card.instagram { border-color: var(--instagram-purple); }
+        .summary-card.youtube { border-color: var(--youtube-red); }
+        .summary-card.linkedin { border-color: var(--linkedin-blue); }
+        .summary-card.whatsapp { border-color: var(--whatsapp-green); }
+        
+        .platform-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .platform-icon.facebook { background: var(--gradient-facebook); }
+        .platform-icon.instagram { background: var(--gradient-instagram); }
+        .platform-icon.youtube { background: var(--gradient-youtube); }
+        .platform-icon.linkedin { background: var(--gradient-linkedin); }
+        .platform-icon.whatsapp { background: var(--gradient-whatsapp); }
+        
+        .stats {
+            flex-grow: 1;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .stat-change.positive {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stat-change.negative {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+        
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metric-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .metric-change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            height: 400px;
+        }
+        
+        /* Report Form */
+        .report-form-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+        
+        .form-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .platform-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .platform-tab {
+            padding: 10px 20px;
+            background: var(--primary-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .platform-tab.active {
+            border-color: currentColor;
+            transform: scale(1.05);
+        }
+        
+        .platform-tab.facebook { color: var(--facebook-blue); }
+        .platform-tab.instagram { color: var(--instagram-purple); }
+        .platform-tab.youtube { color: var(--youtube-red); }
+        .platform-tab.linkedin { color: var(--linkedin-blue); }
+        .platform-tab.whatsapp { color: var(--whatsapp-green); }
+        
+        .platform-tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+        
+        .metrics-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-input-group {
+            background: var(--primary-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        
+        .metric-input-group.facebook { border-color: var(--facebook-blue); }
+        .metric-input-group.instagram { border-color: var(--instagram-purple); }
+        .metric-input-group.youtube { border-color: var(--youtube-red); }
+        .metric-input-group.linkedin { border-color: var(--linkedin-blue); }
+        .metric-input-group.whatsapp { border-color: var(--whatsapp-green); }
+        
+        .metric-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .metric-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .metric-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .metric-help {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .engagement-section {
+            background: var(--primary-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .engagement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .notes-section {
+            margin-bottom: 2rem;
+        }
+        
+        .notes-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            min-height: 120px;
+            resize: vertical;
+            background: white;
+        }
+        
+        .notes-textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        /* Submit Section */
+        .submit-section {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, #2980b9, #1c5d87);
+        }
+        
+        /* Modal */
+        .success-modal .modal-content {
+            border-radius: 20px;
+            overflow: hidden;
+            border: none;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .success-modal .modal-header {
+            background: linear-gradient(135deg, #28a745, #229954);
+            color: white;
+            border: none;
+            padding: 2rem;
+        }
+        
+        .success-modal .modal-body {
+            padding: 2rem;
+        }
+        
+        .report-summary {
+            background: var(--primary-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem 0;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .platform-tabs {
+                justify-content: center;
+            }
+            
+            .metrics-input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .dashboard-header {
+                padding: 1rem 0;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .summary-card {
+                padding: 1rem;
+            }
+            
+            .platform-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .report-form-container {
+                padding: 1rem;
+            }
+            
+            .submit-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    Social Media Analytics Dashboard
+                </div>
+                <div class="date-selector">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="currentDate">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="container">
+            <!-- Summary Cards -->
+            <div class="summary-cards fade-in">
+                <div class="summary-card facebook">
+                    <div class="platform-icon facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-value" id="facebookViews">0</div>
+                        <div class="stat-label">Total Views</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-card instagram">
+                    <div class="platform-icon instagram">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-value" id="instagramReach">0</div>
+                        <div class="stat-label">Total Reach</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-card youtube">
+                    <div class="platform-icon youtube">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-value" id="youtubeSubscribers">0</div>
+                        <div class="stat-label">Subscribers</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>5%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-card linkedin">
+                    <div class="platform-icon linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-value" id="linkedinShares">0</div>
+                        <div class="stat-label">Total Shares</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>3%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-card whatsapp">
+                    <div class="platform-icon whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-value" id="whatsappViews">0</div>
+                        <div class="stat-label">Message Views</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>15%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Chart -->
+            <div class="chart-container fade-in">
+                <h5 class="metric-title mb-3">Performance Overview (Last 7 Days)</h5>
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <!-- Report Form -->
+            <div class="report-form-container fade-in">
+                <h3 class="form-section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Daily Report Submission
+                </h3>
+                
+                <!-- Platform Tabs -->
+                <div class="platform-tabs">
+                    <div class="platform-tab facebook active" data-platform="facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        Facebook
+                    </div>
+                    <div class="platform-tab instagram" data-platform="instagram">
+                        <i class="fab fa-instagram"></i>
+                        Instagram
+                    </div>
+                    <div class="platform-tab youtube" data-platform="youtube">
+                        <i class="fab fa-youtube"></i>
+                        YouTube
+                    </div>
+                    <div class="platform-tab linkedin" data-platform="linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                        LinkedIn
+                    </div>
+                    <div class="platform-tab whatsapp" data-platform="whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp
+                    </div>
+                </div>
+
+                <!-- Metrics Input -->
+                <div id="facebookForm" class="platform-form active">
+                    <div class="metrics-input-grid">
+                        <div class="metric-input-group facebook">
+                            <label class="metric-label">
+                                <i class="fas fa-eye"></i>
+                                Views
+                            </label>
+                            <input type="number" class="metric-input" id="facebookViewsInput" placeholder="Enter views count" min="0">
+                            <div class="metric-help">Total number of views on posts/videos</div>
+                        </div>
+                        
+                        <div class="metric-input-group facebook">
+                            <label class="metric-label">
+                                <i class="fas fa-share"></i>
+                                Shares
+                            </label>
+                            <input type="number" class="metric-input" id="facebookSharesInput" placeholder="Enter shares count" min="0">
+                            <div class="metric-help">Number of times content was shared</div>
+                        </div>
+                        
+                        <div class="metric-input-group facebook">
+                            <label class="metric-label">
+                                <i class="fas fa-user-plus"></i>
+                                New Followers
+                            </label>
+                            <input type="number" class="metric-input" id="facebookFollowersInput" placeholder="Enter new followers" min="0">
+                            <div class="metric-help">New page followers gained today</div>
+                        </div>
+                        
+                        <div class="metric-input-group facebook">
+                            <label class="metric-label">
+                                <i class="fas fa-bullseye"></i>
+                                Reach
+                            </label>
+                            <input type="number" class="metric-input" id="facebookReachInput" placeholder="Enter reach count" min="0">
+                            <div class="metric-help">Number of unique users who saw your content</div>
+                        </div>
+                    </div>
+                    
+                    <div class="engagement-section">
+                        <h6 class="metric-label mb-3">
+                            <i class="fas fa-chart-bar"></i>
+                            Engagement Metrics
+                        </h6>
+                        <div class="engagement-grid">
+                            <div class="metric-input-group">
+                                <label class="metric-label">Reactions</label>
+                                <input type="number" class="metric-input" id="facebookReactionsInput" placeholder="Enter reactions" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Comments</label>
+                                <input type="number" class="metric-input" id="facebookCommentsInput" placeholder="Enter comments" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Clicks</label>
+                                <input type="number" class="metric-input" id="facebookClicksInput" placeholder="Enter clicks" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Video Views</label>
+                                <input type="number" class="metric-input" id="facebookVideoViewsInput" placeholder="Enter video views" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instagram Form (Hidden by default) -->
+                <div id="instagramForm" class="platform-form" style="display: none;">
+                    <div class="metrics-input-grid">
+                        <div class="metric-input-group instagram">
+                            <label class="metric-label">
+                                <i class="fas fa-eye"></i>
+                                Reach
+                            </label>
+                            <input type="number" class="metric-input" id="instagramReachInput" placeholder="Enter reach count" min="0">
+                            <div class="metric-help">Number of unique accounts that saw your posts</div>
+                        </div>
+                        
+                        <div class="metric-input-group instagram">
+                            <label class="metric-label">
+                                <i class="fas fa-share"></i>
+                                Shares
+                            </label>
+                            <input type="number" class="metric-input" id="instagramSharesInput" placeholder="Enter shares count" min="0">
+                            <div class="metric-help">Number of times posts were shared</div>
+                        </div>
+                        
+                        <div class="metric-input-group instagram">
+                            <label class="metric-label">
+                                <i class="fas fa-user-plus"></i>
+                                New Followers
+                            </label>
+                            <input type="number" class="metric-input" id="instagramFollowersInput" placeholder="Enter new followers" min="0">
+                            <div class="metric-help">New Instagram followers gained today</div>
+                        </div>
+                        
+                        <div class="metric-input-group instagram">
+                            <label class="metric-label">
+                                <i class="fas fa-play-circle"></i>
+                                Reel Views
+                            </label>
+                            <input type="number" class="metric-input" id="instagramReelViewsInput" placeholder="Enter reel views" min="0">
+                            <div class="metric-help">Total views on Instagram Reels</div>
+                        </div>
+                    </div>
+                    
+                    <div class="engagement-section">
+                        <h6 class="metric-label mb-3">
+                            <i class="fas fa-chart-bar"></i>
+                            Engagement Metrics
+                        </h6>
+                        <div class="engagement-grid">
+                            <div class="metric-input-group">
+                                <label class="metric-label">Likes</label>
+                                <input type="number" class="metric-input" id="instagramLikesInput" placeholder="Enter likes" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Comments</label>
+                                <input type="number" class="metric-input" id="instagramCommentsInput" placeholder="Enter comments" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Saves</label>
+                                <input type="number" class="metric-input" id="instagramSavesInput" placeholder="Enter saves" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Story Views</label>
+                                <input type="number" class="metric-input" id="instagramStoryViewsInput" placeholder="Enter story views" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- YouTube Form (Hidden by default) -->
+                <div id="youtubeForm" class="platform-form" style="display: none;">
+                    <div class="metrics-input-grid">
+                        <div class="metric-input-group youtube">
+                            <label class="metric-label">
+                                <i class="fas fa-eye"></i>
+                                Views
+                            </label>
+                            <input type="number" class="metric-input" id="youtubeViewsInput" placeholder="Enter views count" min="0">
+                            <div class="metric-help">Total views on all videos</div>
+                        </div>
+                        
+                        <div class="metric-input-group youtube">
+                            <label class="metric-label">
+                                <i class="fas fa-user-plus"></i>
+                                New Subscribers
+                            </label>
+                            <input type="number" class="metric-input" id="youtubeSubscribersInput" placeholder="Enter new subscribers" min="0">
+                            <div class="metric-help">New channel subscribers gained today</div>
+                        </div>
+                        
+                        <div class="metric-input-group youtube">
+                            <label class="metric-label">
+                                <i class="fas fa-share"></i>
+                                Shares
+                            </label>
+                            <input type="number" class="metric-input" id="youtubeSharesInput" placeholder="Enter shares count" min="0">
+                            <div class="metric-help">Number of times videos were shared</div>
+                        </div>
+                        
+                        <div class="metric-input-group youtube">
+                            <label class="metric-label">
+                                <i class="fas fa-clock"></i>
+                                Watch Time (hours)
+                            </label>
+                            <input type="number" class="metric-input" id="youtubeWatchTimeInput" placeholder="Enter watch time" min="0" step="0.1">
+                            <div class="metric-help">Total watch time in hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="engagement-section">
+                        <h6 class="metric-label mb-3">
+                            <i class="fas fa-chart-bar"></i>
+                            Engagement Metrics
+                        </h6>
+                        <div class="engagement-grid">
+                            <div class="metric-input-group">
+                                <label class="metric-label">Likes</label>
+                                <input type="number" class="metric-input" id="youtubeLikesInput" placeholder="Enter likes" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Comments</label>
+                                <input type="number" class="metric-input" id="youtubeCommentsInput" placeholder="Enter comments" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">New Videos</label>
+                                <input type="number" class="metric-input" id="youtubeVideosInput" placeholder="Enter videos uploaded" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Click-through Rate (%)</label>
+                                <input type="number" class="metric-input" id="youtubeCTRInput" placeholder="Enter CTR" min="0" max="100" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LinkedIn Form (Hidden by default) -->
+                <div id="linkedinForm" class="platform-form" style="display: none;">
+                    <div class="metrics-input-grid">
+                        <div class="metric-input-group linkedin">
+                            <label class="metric-label">
+                                <i class="fas fa-eye"></i>
+                                Impressions
+                            </label>
+                            <input type="number" class="metric-input" id="linkedinImpressionsInput" placeholder="Enter impressions" min="0">
+                            <div class="metric-help">Number of times content was displayed</div>
+                        </div>
+                        
+                        <div class="metric-input-group linkedin">
+                            <label class="metric-label">
+                                <i class="fas fa-share"></i>
+                                Shares
+                            </label>
+                            <input type="number" class="metric-input" id="linkedinSharesInput" placeholder="Enter shares count" min="0">
+                            <div class="metric-help">Number of times posts were shared</div>
+                        </div>
+                        
+                        <div class="metric-input-group linkedin">
+                            <label class="metric-label">
+                                <i class="fas fa-user-plus"></i>
+                                New Followers
+                            </label>
+                            <input type="number" class="metric-input" id="linkedinFollowersInput" placeholder="Enter new followers" min="0">
+                            <div class="metric-help">New company page followers</div>
+                        </div>
+                        
+                        <div class="metric-input-group linkedin">
+                            <label class="metric-label">
+                                <i class="fas fa-bullseye"></i>
+                                Click-through Rate (%)
+                            </label>
+                            <input type="number" class="metric-input" id="linkedinCTRInput" placeholder="Enter CTR" min="0" max="100" step="0.1">
+                            <div class="metric-help">Percentage of impressions that resulted in clicks</div>
+                        </div>
+                    </div>
+                    
+                    <div class="engagement-section">
+                        <h6 class="metric-label mb-3">
+                            <i class="fas fa-chart-bar"></i>
+                            Engagement Metrics
+                        </h6>
+                        <div class="engagement-grid">
+                            <div class="metric-input-group">
+                                <label class="metric-label">Reactions</label>
+                                <input type="number" class="metric-input" id="linkedinReactionsInput" placeholder="Enter reactions" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Comments</label>
+                                <input type="number" class="metric-input" id="linkedinCommentsInput" placeholder="Enter comments" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Clicks</label>
+                                <input type="number" class="metric-input" id="linkedinClicksInput" placeholder="Enter clicks" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Video Views</label>
+                                <input type="number" class="metric-input" id="linkedinVideoViewsInput" placeholder="Enter video views" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Form (Hidden by default) -->
+                <div id="whatsappForm" class="platform-form" style="display: none;">
+                    <div class="metrics-input-grid">
+                        <div class="metric-input-group whatsapp">
+                            <label class="metric-label">
+                                <i class="fas fa-eye"></i>
+                                Message Views
+                            </label>
+                            <input type="number" class="metric-input" id="whatsappViewsInput" placeholder="Enter message views" min="0">
+                            <div class="metric-help">Number of times messages were viewed</div>
+                        </div>
+                        
+                        <div class="metric-input-group whatsapp">
+                            <label class="metric-label">
+                                <i class="fas fa-share"></i>
+                                Forwards
+                            </label>
+                            <input type="number" class="metric-input" id="whatsappForwardsInput" placeholder="Enter forwards count" min="0">
+                            <div class="metric-help">Number of times messages were forwarded</div>
+                        </div>
+                        
+                        <div class="metric-input-group whatsapp">
+                            <label class="metric-label">
+                                <i class="fas fa-user-plus"></i>
+                                New Contacts
+                            </label>
+                            <input type="number" class="metric-input" id="whatsappContactsInput" placeholder="Enter new contacts" min="0">
+                            <div class="metric-help">New contacts added to broadcast list</div>
+                        </div>
+                        
+                        <div class="metric-input-group whatsapp">
+                            <label class="metric-label">
+                                <i class="fas fa-comment"></i>
+                                Replies Received
+                            </label>
+                            <input type="number" class="metric-input" id="whatsappRepliesInput" placeholder="Enter replies received" min="0">
+                            <div class="metric-help">Number of replies to your messages</div>
+                        </div>
+                    </div>
+                    
+                    <div class="engagement-section">
+                        <h6 class="metric-label mb-3">
+                            <i class="fas fa-chart-bar"></i>
+                            Engagement Metrics
+                        </h6>
+                        <div class="engagement-grid">
+                            <div class="metric-input-group">
+                                <label class="metric-label">Messages Sent</label>
+                                <input type="number" class="metric-input" id="whatsappSentInput" placeholder="Enter messages sent" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Groups Reached</label>
+                                <input type="number" class="metric-input" id="whatsappGroupsInput" placeholder="Enter groups reached" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Media Sent</label>
+                                <input type="number" class="metric-input" id="whatsappMediaInput" placeholder="Enter media files sent" min="0">
+                            </div>
+                            <div class="metric-input-group">
+                                <label class="metric-label">Response Time (min)</label>
+                                <input type="number" class="metric-input" id="whatsappResponseTimeInput" placeholder="Enter avg response time" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes Section -->
+                <div class="notes-section">
+                    <h6 class="metric-label mb-3">
+                        <i class="fas fa-sticky-note"></i>
+                        Additional Notes & Observations
+                    </h6>
+                    <textarea class="notes-textarea" id="reportNotes" placeholder="Add any additional observations, challenges, or successes for today's report..."></textarea>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-section fade-in">
+                <button class="submit-btn" id="submitReportBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Daily Report
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal fade success-modal" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Report Submitted Successfully!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <div class="display-1 text-success mb-3">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h4 class="mb-3">Daily Report Submitted</h4>
+                        <p class="lead">Your social media metrics have been successfully recorded.</p>
+                    </div>
+                    
+                    <div class="report-summary">
+                        <h6 class="metric-label mb-3">
+                            <i class="fas fa-clipboard-list"></i>
+                            Report Summary
+                        </h6>
+                        <div id="reportSummaryContent">
+                            <!-- Summary will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success mt-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> This report has been saved and can be viewed in the reports section.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" id="viewReportsBtn">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        View All Reports
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize Chart
+        let performanceChart;
+        
+        // Platform data storage
+        const platformData = {
+            facebook: {
+                views: 12500,
+                shares: 345,
+                followers: 89,
+                reach: 24500,
+                reactions: 1200,
+                comments: 156,
+                clicks: 345,
+                videoViews: 5600
+            },
+            instagram: {
+                reach: 18900,
+                shares: 234,
+                followers: 145,
+                reelViews: 8900,
+                likes: 2450,
+                comments: 189,
+                saves: 456,
+                storyViews: 12000
+            },
+            youtube: {
+                views: 45600,
+                subscribers: 67,
+                shares: 123,
+                watchTime: 245.5,
+                likes: 2340,
+                comments: 456,
+                videos: 3,
+                ctr: 4.5
+            },
+            linkedin: {
+                impressions: 34500,
+                shares: 189,
+                followers: 45,
+                ctr: 2.3,
+                reactions: 890,
+                comments: 78,
+                clicks: 456,
+                videoViews: 3400
+            },
+            whatsapp: {
+                views: 8900,
+                forwards: 234,
+                contacts: 56,
+                replies: 345,
+                sent: 120,
+                groups: 15,
+                media: 45,
+                responseTime: 12
+            }
+        };
+        
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Initialize summary cards
+            updateSummaryCards();
+            
+            // Initialize performance chart
+            initializePerformanceChart();
+            
+            // Platform tab switching
+            setupPlatformTabs();
+            
+            // Form submission
+            setupFormSubmission();
+            
+            // Add sample data for demonstration
+            addSampleData();
+        });
+        
+        // Update summary cards with data
+        function updateSummaryCards() {
+            document.getElementById('facebookViews').textContent = formatNumber(platformData.facebook.views);
+            document.getElementById('instagramReach').textContent = formatNumber(platformData.instagram.reach);
+            document.getElementById('youtubeSubscribers').textContent = formatNumber(platformData.youtube.subscribers);
+            document.getElementById('linkedinShares').textContent = formatNumber(platformData.linkedin.shares);
+            document.getElementById('whatsappViews').textContent = formatNumber(platformData.whatsapp.views);
+        }
+        
+        // Initialize performance chart
+        function initializePerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            // Get last 7 days
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                days.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+            }
+            
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [
+                        {
+                            label: 'Facebook Views',
+                            data: [8500, 9200, 10100, 11300, 12000, 12200, 12500],
+                            borderColor: '#1877f2',
+                            backgroundColor: 'rgba(24, 119, 242, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Instagram Reach',
+                            data: [12000, 13500, 14500, 16500, 17500, 18200, 18900],
+                            borderColor: '#e4405f',
+                            backgroundColor: 'rgba(228, 64, 95, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'YouTube Views',
+                            data: [28000, 32000, 35000, 38000, 41000, 43500, 45600],
+                            borderColor: '#ff0000',
+                            backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 1000) {
+                                        return (value / 1000).toFixed(1) + 'k';
+                                    }
+                                    return value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Setup platform tabs
+        function setupPlatformTabs() {
+            const tabs = document.querySelectorAll('.platform-tab');
+            const forms = document.querySelectorAll('.platform-form');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const platform = this.getAttribute('data-platform');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding form
+                    forms.forEach(form => {
+                        if (form.id === `${platform}Form`) {
+                            form.style.display = 'block';
+                            form.classList.add('active');
+                        } else {
+                            form.style.display = 'none';
+                            form.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Setup form submission
+        function setupFormSubmission() {
+            const submitBtn = document.getElementById('submitReportBtn');
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            const viewReportsBtn = document.getElementById('viewReportsBtn');
+            
+            submitBtn.addEventListener('click', function() {
+                // Collect all data
+                const reportData = {
+                    date: new Date().toISOString().split('T')[0],
+                    timestamp: new Date().toISOString(),
+                    platforms: {}
+                };
+                
+                // Collect Facebook data
+                reportData.platforms.facebook = {
+                    views: parseInt(document.getElementById('facebookViewsInput').value) || 0,
+                    shares: parseInt(document.getElementById('facebookSharesInput').value) || 0,
+                    followers: parseInt(document.getElementById('facebookFollowersInput').value) || 0,
+                    reach: parseInt(document.getElementById('facebookReachInput').value) || 0,
+                    reactions: parseInt(document.getElementById('facebookReactionsInput').value) || 0,
+                    comments: parseInt(document.getElementById('facebookCommentsInput').value) || 0,
+                    clicks: parseInt(document.getElementById('facebookClicksInput').value) || 0,
+                    videoViews: parseInt(document.getElementById('facebookVideoViewsInput').value) || 0
+                };
+                
+                // Collect Instagram data
+                reportData.platforms.instagram = {
+                    reach: parseInt(document.getElementById('instagramReachInput').value) || 0,
+                    shares: parseInt(document.getElementById('instagramSharesInput').value) || 0,
+                    followers: parseInt(document.getElementById('instagramFollowersInput').value) || 0,
+                    reelViews: parseInt(document.getElementById('instagramReelViewsInput').value) || 0,
+                    likes: parseInt(document.getElementById('instagramLikesInput').value) || 0,
+                    comments: parseInt(document.getElementById('instagramCommentsInput').value) || 0,
+                    saves: parseInt(document.getElementById('instagramSavesInput').value) || 0,
+                    storyViews: parseInt(document.getElementById('instagramStoryViewsInput').value) || 0
+                };
+                
+                // Collect YouTube data
+                reportData.platforms.youtube = {
+                    views: parseInt(document.getElementById('youtubeViewsInput').value) || 0,
+                    subscribers: parseInt(document.getElementById('youtubeSubscribersInput').value) || 0,
+                    shares: parseInt(document.getElementById('youtubeSharesInput').value) || 0,
+                    watchTime: parseFloat(document.getElementById('youtubeWatchTimeInput').value) || 0,
+                    likes: parseInt(document.getElementById('youtubeLikesInput').value) || 0,
+                    comments: parseInt(document.getElementById('youtubeCommentsInput').value) || 0,
+                    videos: parseInt(document.getElementById('youtubeVideosInput').value) || 0,
+                    ctr: parseFloat(document.getElementById('youtubeCTRInput').value) || 0
+                };
+                
+                // Collect LinkedIn data
+                reportData.platforms.linkedin = {
+                    impressions: parseInt(document.getElementById('linkedinImpressionsInput').value) || 0,
+                    shares: parseInt(document.getElementById('linkedinSharesInput').value) || 0,
+                    followers: parseInt(document.getElementById('linkedinFollowersInput').value) || 0,
+                    ctr: parseFloat(document.getElementById('linkedinCTRInput').value) || 0,
+                    reactions: parseInt(document.getElementById('linkedinReactionsInput').value) || 0,
+                    comments: parseInt(document.getElementById('linkedinCommentsInput').value) || 0,
+                    clicks: parseInt(document.getElementById('linkedinClicksInput').value) || 0,
+                    videoViews: parseInt(document.getElementById('linkedinVideoViewsInput').value) || 0
+                };
+                
+                // Collect WhatsApp data
+                reportData.platforms.whatsapp = {
+                    views: parseInt(document.getElementById('whatsappViewsInput').value) || 0,
+                    forwards: parseInt(document.getElementById('whatsappForwardsInput').value) || 0,
+                    contacts: parseInt(document.getElementById('whatsappContactsInput').value) || 0,
+                    replies: parseInt(document.getElementById('whatsappRepliesInput').value) || 0,
+                    sent: parseInt(document.getElementById('whatsappSentInput').value) || 0,
+                    groups: parseInt(document.getElementById('whatsappGroupsInput').value) || 0,
+                    media: parseInt(document.getElementById('whatsappMediaInput').value) || 0,
+                    responseTime: parseInt(document.getElementById('whatsappResponseTimeInput').value) || 0
+                };
+                
+                // Add notes
+                reportData.notes = document.getElementById('reportNotes').value || 'No additional notes provided.';
+                
+                // Calculate totals
+                reportData.totals = {
+                    totalViews: reportData.platforms.facebook.views + reportData.platforms.youtube.views + reportData.platforms.whatsapp.views,
+                    totalShares: reportData.platforms.facebook.shares + reportData.platforms.instagram.shares + 
+                                 reportData.platforms.youtube.shares + reportData.platforms.linkedin.shares + reportData.platforms.whatsapp.forwards,
+                    totalFollowers: reportData.platforms.facebook.followers + reportData.platforms.instagram.followers + 
+                                   reportData.platforms.youtube.subscribers + reportData.platforms.linkedin.followers,
+                    totalReach: reportData.platforms.facebook.reach + reportData.platforms.instagram.reach
+                };
+                
+                // Update summary cards with new data
+                platformData.facebook.views += reportData.platforms.facebook.views;
+                platformData.instagram.reach += reportData.platforms.instagram.reach;
+                platformData.youtube.subscribers += reportData.platforms.youtube.subscribers;
+                platformData.linkedin.shares += reportData.platforms.linkedin.shares;
+                platformData.whatsapp.views += reportData.platforms.whatsapp.views;
+                
+                updateSummaryCards();
+                
+                // Update chart
+                updateChartWithNewData(reportData);
+                
+                // Generate summary for modal
+                generateReportSummary(reportData);
+                
+                // Show success modal
+                successModal.show();
+                
+                // Reset form
+                resetForm();
+                
+                // Log data to console (for debugging)
+                console.log('Report Data:', reportData);
+            });
+            
+            viewReportsBtn.addEventListener('click', function() {
+                alert('Reports section would open here. This is a demo feature.');
+                successModal.hide();
+            });
+        }
+        
+        // Add sample data for demonstration
+        function addSampleData() {
+            // Facebook
+            document.getElementById('facebookViewsInput').value = 1250;
+            document.getElementById('facebookSharesInput').value = 45;
+            document.getElementById('facebookFollowersInput').value = 12;
+            document.getElementById('facebookReachInput').value = 3500;
+            document.getElementById('facebookReactionsInput').value = 230;
+            document.getElementById('facebookCommentsInput').value = 45;
+            document.getElementById('facebookClicksInput').value = 89;
+            document.getElementById('facebookVideoViewsInput').value = 1200;
+            
+            // Instagram
+            document.getElementById('instagramReachInput').value = 2800;
+            document.getElementById('instagramSharesInput').value = 34;
+            document.getElementById('instagramFollowersInput').value = 25;
+            document.getElementById('instagramReelViewsInput').value = 1500;
+            document.getElementById('instagramLikesInput').value = 450;
+            document.getElementById('instagramCommentsInput').value = 38;
+            document.getElementById('instagramSavesInput').value = 78;
+            document.getElementById('instagramStoryViewsInput').value = 3200;
+            
+            // YouTube
+            document.getElementById('youtubeViewsInput').value = 5600;
+            document.getElementById('youtubeSubscribersInput').value = 8;
+            document.getElementById('youtubeSharesInput').value = 23;
+            document.getElementById('youtubeWatchTimeInput').value = 45.5;
+            document.getElementById('youtubeLikesInput').value = 340;
+            document.getElementById('youtubeCommentsInput').value = 56;
+            document.getElementById('youtubeVideosInput').value = 2;
+            document.getElementById('youtubeCTRInput').value = 5.2;
+            
+            // LinkedIn
+            document.getElementById('linkedinImpressionsInput').value = 4500;
+            document.getElementById('linkedinSharesInput').value = 28;
+            document.getElementById('linkedinFollowersInput').value = 6;
+            document.getElementById('linkedinCTRInput').value = 3.1;
+            document.getElementById('linkedinReactionsInput').value = 120;
+            document.getElementById('linkedinCommentsInput').value = 18;
+            document.getElementById('linkedinClicksInput').value = 89;
+            document.getElementById('linkedinVideoViewsInput').value = 900;
+            
+            // WhatsApp
+            document.getElementById('whatsappViewsInput').value = 1200;
+            document.getElementById('whatsappForwardsInput').value = 45;
+            document.getElementById('whatsappContactsInput').value = 8;
+            document.getElementById('whatsappRepliesInput').value = 56;
+            document.getElementById('whatsappSentInput').value = 25;
+            document.getElementById('whatsappGroupsInput').value = 3;
+            document.getElementById('whatsappMediaInput').value = 12;
+            document.getElementById('whatsappResponseTimeInput').value = 8;
+            
+            // Notes
+            document.getElementById('reportNotes').value = 'Facebook performed exceptionally well today with high engagement rates. Instagram Reels are gaining traction. YouTube watch time increased by 15%.';
+        }
+        
+        // Reset form after submission
+        function resetForm() {
+            const inputs = document.querySelectorAll('.metric-input, .notes-textarea');
+            inputs.forEach(input => {
+                if (input.tagName === 'TEXTAREA') {
+                    input.value = '';
+                } else if (input.type === 'number') {
+                    input.value = '';
+                }
+            });
+        }
+        
+        // Generate report summary for modal
+        function generateReportSummary(reportData) {
+            const summaryContent = document.getElementById('reportSummaryContent');
+            let html = '';
+            
+            // Add totals
+            html += `
+                <div class="summary-item">
+                    <span>Total Views Across Platforms:</span>
+                    <strong>${formatNumber(reportData.totals.totalViews)}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Total Shares/Forwards:</span>
+                    <strong>${formatNumber(reportData.totals.totalShares)}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Total New Followers/Subscribers:</span>
+                    <strong>${formatNumber(reportData.totals.totalFollowers)}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Total Reach (Facebook + Instagram):</span>
+                    <strong>${formatNumber(reportData.totals.totalReach)}</strong>
+                </div>
+            `;
+            
+            // Add platform highlights
+            const platforms = ['facebook', 'instagram', 'youtube', 'linkedin', 'whatsapp'];
+            platforms.forEach(platform => {
+                const data = reportData.platforms[platform];
+                if (Object.values(data).some(val => val > 0)) {
+                    let platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+                    if (platform === 'whatsapp') platformName = 'WhatsApp';
+                    
+                    html += `
+                        <div class="summary-item">
+                            <span><i class="fab fa-${platform} me-2"></i>${platformName} Data Recorded</span>
+                            <span class="badge bg-success">Submitted</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            summaryContent.innerHTML = html;
+        }
+        
+        // Update chart with new data
+        function updateChartWithNewData(reportData) {
+            // Get last data point for each dataset
+            const facebookData = performanceChart.data.datasets[0].data;
+            const instagramData = performanceChart.data.datasets[1].data;
+            const youtubeData = performanceChart.data.datasets[2].data;
+            
+            // Add new data points (simulating growth)
+            facebookData.push(facebookData[facebookData.length - 1] + reportData.platforms.facebook.views);
+            instagramData.push(instagramData[instagramData.length - 1] + reportData.platforms.instagram.reach);
+            youtubeData.push(youtubeData[youtubeData.length - 1] + reportData.platforms.youtube.views);
+            
+            // Remove first data point to maintain 7-day window
+            facebookData.shift();
+            instagramData.shift();
+            youtubeData.shift();
+            
+            // Update labels (add new day, remove old)
+            const labels = performanceChart.data.labels;
+            const newDate = new Date();
+            newDate.setDate(newDate.getDate() + 1);
+            labels.push(newDate.toLocaleDateString('en-US', { weekday: 'short' }));
+            labels.shift();
+            
+            // Update chart
+            performanceChart.update();
+        }
+        
+        // Helper function to format numbers
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+        
+        // Function to simulate data loading
+        function simulateDataLoading() {
+            const cards = document.querySelectorAll('.summary-card');
+            cards.forEach(card => {
+                card.style.opacity = '0.5';
+            });
+            
+            setTimeout(() => {
+                cards.forEach(card => {
+                    card.style.opacity = '1';
+                });
+            }, 500);
+        }
+        
+        // Add animation on scroll
+        function addScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.summary-card, .metric-card, .chart-container, .report-form-container').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        // Initialize scroll animations
+        window.addEventListener('load', addScrollAnimations);
+    </script>
+</body>
+</html>

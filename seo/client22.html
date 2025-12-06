@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Application Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Position the toast in the top-right corner */
+    #toastContainer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1055;
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4">Application Form</h2>
+            <form id="applicationForm">
+              <div class="mb-3">
+                <label for="clientSelect" class="form-label">Select Client</label>
+                <select class="form-select" id="clientSelect" required>
+                  <option value="">Choose a client</option>
+                  <option value="Client 1">Client 1</option>
+                  <option value="Client 2">Client 2</option>
+                  <option value="Client 3">Client 3</option>
+                  <option value="Client 4">Client 4</option>
+                  <option value="Client 5">Client 5</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="callNote" class="form-label">Call Note</label>
+                <textarea class="form-control" id="callNote" rows="3" placeholder="Enter call notes..."></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <textarea class="form-control" id="status" rows="2" placeholder="Enter status..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">Submit Application</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const form = document.getElementById('applicationForm');
+    const toastContainer = document.getElementById('toastContainer');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const client = document.getElementById('clientSelect').value;
+
+      if (client) {
+        // Create toast element
+        const toastEl = document.createElement('div');
+        toastEl.className = 'toast align-items-center text-bg-success border-0';
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+
+        toastEl.innerHTML = `
+          <div class="d-flex">
+            <div class="toast-body">
+              ✔ Application Submitted Successfully for ${client}!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        `;
+
+        toastContainer.appendChild(toastEl);
+
+        // Initialize and show the toast
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+
+        // Remove toast element after hidden
+        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+
+        // Reset form
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
